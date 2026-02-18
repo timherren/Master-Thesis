@@ -1,0 +1,233 @@
+---
+title: "DAG Validation Report"
+date: "`r format(Sys.time(), '%B %d, %Y — %H:%M')`"
+output:
+  pdf_document:
+    toc: false
+    latex_engine: pdflatex
+header-includes:
+  - \usepackage{booktabs}
+params:
+  amat: NULL
+  amat_testable: NULL
+  ci_summary: NULL
+  ci_rejected: NULL
+  ci_all: NULL
+  alpha: 0.05
+  tests: "gcm, pcm"
+  interpretation: ""
+  layout_mat: NULL
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(igraph)
+```
+
+## 1. Overview
+
+This report summarises the DAG falsification analysis performed with the
+**DAG Validator Agent**.
+
+- **Significance level:** `r params$alpha`
+- **CI test types:** `r params$tests`
+- **Number of variables:** `r if (!is.null(params$amat)) ncol(params$amat) else "N/A"`
+- **Variables:** `r if (!is.null(params$amat)) paste(colnames(params$amat), collapse = ", ") else "N/A"`
+
+\vspace{6pt}
+
+## 2. Hypothesised DAG
+
+```{r dag-plot, fig.width=6, fig.height=6.5, fig.align='center'}
+if (!is.null(params$amat)) {
+  A    <- params$amat
+  vars <- rownames(A)
+  g    <- graph_from_adjacency_matrix(A, mode = "directed")
+
+  if (!is.null(params$layout_mat)) {
+    lay <- params$layout_mat[vars, , drop = FALSE]
+  } else {
+    lay <- layout_in_circle(g)
+  }
+  xlim <- range(lay[, 1]) * 1.2
+  ylim <- range(lay[, 2]) * 1.2
+
+  op <- par(mar = c(4, 1, 2, 1))
+  on.exit(par(op), add = TRUE)
+
+  plot(g,
+       main = "Hypothesised DAG",
+       vertex.label.cex = 1.0, vertex.size = 22,
+       edge.arrow.size = 0.35, layout = lay,
+       rescale = FALSE, xlim = xlim, ylim = ylim)
+
+  # Overlay CI tests as red dotted lines
+  A_test <- params$amat_testable
+  if (!is.null(A_test)) {
+    for (i in seq_len(nrow(A_test))) {
+      for (j in seq_len(ncol(A_test))) {
+        if (i < j && A_test[i, j] == 1L) {
+          v1 <- rownames(A_test)[i]; v2 <- colnames(A_test)[j]
+          if (v1 %in% vars && v2 %in% vars) {
+            idx1 <- match(v1, vars); idx2 <- match(v2, vars)
+            segments(lay[idx1, 1], lay[idx1, 2],
+                     lay[idx2, 1], lay[idx2, 2],
+                     col = "red", lty = 3, lwd = 2)
+          }
+        }
+      }
+    }
+  }
+
+  # Legend
+  leg_labels <- "DAG edges (directed)"
+  leg_col    <- "black"
+  leg_lty    <- 1
+  leg_lwd    <- 2
+  if (!is.null(A_test)) {
+    leg_labels <- c(leg_labels, "CI tests to run (undirected)")
+    leg_col    <- c(leg_col, "red")
+    leg_lty    <- c(leg_lty, 3)
+    leg_lwd    <- c(leg_lwd, 2)
+  }
+  par(xpd = TRUE)
+  legend("bottom", legend = leg_labels, col = leg_col,
+         lty = leg_lty, lwd = leg_lwd, bg = "white",
+         box.col = "grey80", cex = 0.8, horiz = TRUE,
+         inset = c(0, -0.12))
+} else {
+  plot.new(); text(0.5, 0.5, "No DAG defined.", cex = 1.2)
+}
+```
+
+\vspace{6pt}
+
+## 3. CI Test Summary
+
+```{r summary-table, results='asis'}
+if (!is.null(params$ci_summary) && nrow(params$ci_summary) > 0) {
+  knitr::kable(params$ci_summary, format = "latex", booktabs = TRUE)
+} else {
+  cat("No CI tests were run.")
+}
+```
+
+\vspace{6pt}
+
+## 4. Rejected CIs
+
+```{r rejected-table, results='asis'}
+if (!is.null(params$ci_rejected) && nrow(params$ci_rejected) > 0) {
+  knitr::kable(params$ci_rejected, format = "latex", booktabs = TRUE)
+} else {
+  cat("No CI statements were rejected.")
+}
+```
+
+## 5. DAG with Rejected CIs
+
+```{r dag-rejected-plot, fig.width=6, fig.height=6.5, fig.align='center'}
+if (!is.null(params$amat) && !is.null(params$ci_all) && nrow(params$ci_all) > 0) {
+  A    <- params$amat
+  vars <- rownames(A)
+  g    <- graph_from_adjacency_matrix(A, mode = "directed")
+
+  if (!is.null(params$layout_mat)) {
+    lay <- params$layout_mat[vars, , drop = FALSE]
+  } else {
+    lay <- layout_in_circle(g)
+  }
+  xlim <- range(lay[, 1]) * 1.2
+  ylim <- range(lay[, 2]) * 1.2
+
+  op <- par(mar = c(4, 1, 2, 1))
+  on.exit(par(op), add = TRUE)
+
+  plot(g,
+       main = "CI Test Results",
+       vertex.label.cex = 1.0, vertex.size = 22,
+       edge.arrow.size = 0.35, layout = lay,
+       rescale = FALSE, xlim = xlim, ylim = ylim)
+
+  # Overlay CI tests as red dotted lines
+  A_test <- params$amat_testable
+  if (!is.null(A_test)) {
+    for (i in seq_len(nrow(A_test))) {
+      for (j in seq_len(ncol(A_test))) {
+        if (i < j && A_test[i, j] == 1L) {
+          v1 <- rownames(A_test)[i]; v2 <- colnames(A_test)[j]
+          if (v1 %in% vars && v2 %in% vars) {
+            idx1 <- match(v1, vars); idx2 <- match(v2, vars)
+            segments(lay[idx1, 1], lay[idx1, 2],
+                     lay[idx2, 1], lay[idx2, 2],
+                     col = "red", lty = 3, lwd = 2)
+          }
+        }
+      }
+    }
+  }
+
+  # Overlay rejected CIs as solid red
+  rejs <- params$ci_all[params$ci_all$rejected, , drop = FALSE]
+  has_rejected <- nrow(rejs) > 0
+  if (has_rejected) {
+    canon <- function(x) gsub("[^a-z0-9]", "", tolower(sub("_(ll|ul)$", "", x)))
+    canon_vars <- canon(vars)
+    name_map   <- setNames(vars, canon_vars)
+
+    for (k in seq_len(nrow(rejs))) {
+      ci_str <- as.character(rejs$CI[k])
+      main_str <- trimws(ci_str)
+      main_str <- gsub("_\\|\\|_", "\u27C2", main_str)
+      main_str <- gsub("\\|\\|",   "\u27C2", main_str)
+      main_str <- sub("\\s*\\|.*$", "", main_str)
+      parts <- trimws(strsplit(main_str, "\u27C2", fixed = TRUE)[[1]])
+      if (length(parts) < 2) next
+      Xc <- canon(parts[1]); Yc <- canon(parts[2])
+      if (!(Xc %in% names(name_map) && Yc %in% names(name_map))) next
+      i <- match(name_map[[Xc]], vars)
+      j <- match(name_map[[Yc]], vars)
+      if (is.na(i) || is.na(j)) next
+      segments(lay[i, 1], lay[i, 2], lay[j, 1], lay[j, 2],
+               col = "red", lty = 1, lwd = 3)
+    }
+  }
+
+  # Legend
+  leg_labels <- "DAG edges (directed)"
+  leg_col    <- "black"
+  leg_lty    <- 1
+  leg_lwd    <- 2
+  if (!is.null(A_test)) {
+    leg_labels <- c(leg_labels, "CI tests (tested)")
+    leg_col    <- c(leg_col, "red")
+    leg_lty    <- c(leg_lty, 3)
+    leg_lwd    <- c(leg_lwd, 2)
+  }
+  if (has_rejected) {
+    leg_labels <- c(leg_labels, "Rejected CIs")
+    leg_col    <- c(leg_col, "red")
+    leg_lty    <- c(leg_lty, 1)
+    leg_lwd    <- c(leg_lwd, 3)
+  }
+  par(xpd = TRUE)
+  legend("bottom", legend = leg_labels, col = leg_col,
+         lty = leg_lty, lwd = leg_lwd, bg = "white",
+         box.col = "grey80", cex = 0.8, horiz = TRUE,
+         inset = c(0, -0.12))
+} else {
+  plot.new(); text(0.5, 0.5, "No CI test results available.", cex = 1.2)
+}
+```
+
+\vspace{6pt}
+
+## 6. Interpretation
+
+```{r interpretation, results='asis'}
+if (nzchar(params$interpretation)) {
+  cat(params$interpretation)
+} else {
+  cat("No LLM interpretation available.")
+}
+```

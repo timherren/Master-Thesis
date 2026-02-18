@@ -1,0 +1,5 @@
+.env
+.DS_Store
+.Rhistory
+.RData
+.Rproj.user/

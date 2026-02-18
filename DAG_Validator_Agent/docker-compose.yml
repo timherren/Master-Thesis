@@ -1,0 +1,24 @@
+# ============================================================
+# docker-compose.yml — DAG Validator Agent
+#
+# Usage:
+#   Double-click start.command (Mac) or start.bat (Windows)
+#   Or manually:  docker compose up --build
+#   Open http://localhost:3838
+#
+# Ollama runs natively on the host for GPU-accelerated LLM.
+# The app container connects to it via host.docker.internal.
+# ============================================================
+
+services:
+
+  app:
+    build: .
+    ports:
+      - "3838:3838"
+    environment:
+      OLLAMA_HOST: http://host.docker.internal:11434
+      OLLAMA_MODEL: llama3.2:latest
+      OLLAMA_DAG_MODEL: llama3.2:latest
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

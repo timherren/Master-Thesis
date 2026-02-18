@@ -1,0 +1,12 @@
+.git
+.env
+.dockerignore
+Dockerfile
+docker-compose.yml
+*.Rproj
+.Rproj.user
+.Rhistory
+.RData
+RUN_APP/
+STOP_APP/
+Data/
