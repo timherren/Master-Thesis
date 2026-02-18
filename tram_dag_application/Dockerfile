@@ -62,7 +62,9 @@ RUN conda run -n tramdag pip install --no-cache-dir \
     -i https://test.pypi.org/simple \
     --extra-index-url https://pypi.org/simple \
     tramdag && \
-    conda run -n tramdag pip install --no-cache-dir reportlab
+    conda run -n tramdag pip install --no-cache-dir reportlab && \
+    sed -i 's/\.applymap(/.map(/g' \
+      /opt/conda/envs/tramdag/lib/python3.11/site-packages/tramdag/TramDagModel.py
 
 # ---- 5. Application code ----
 WORKDIR /app

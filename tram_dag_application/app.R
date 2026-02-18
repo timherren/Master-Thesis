@@ -249,7 +249,7 @@ create_experiment_dir <- function(experiment_name = NULL) {
 # Save reproducible analysis scripts to experiment folder
 save_analysis_scripts <- function(experiment_dir, data_path = NULL, amat = NULL, 
                                   epochs = 100, learning_rate = 0.01, 
-                                  batch_size = 512, set_initial_weights = FALSE,
+                                  batch_size = 512,
                                   X_var = NULL, Y_var = NULL,
                                   x_treated = 1, x_control = 0) {
   vars <- if (!is.null(amat)) rownames(amat) else NULL
@@ -422,7 +422,6 @@ Edit `reproduce_analysis.R` to:
 - **Epochs**: ', epochs, '
 - **Learning Rate**: ', learning_rate, '
 - **Batch Size**: ', batch_size, '
-- **Initial Weights**: ', if(set_initial_weights) "R-based" else "Random", '
 
 ## Data Information
 ', if(!is.null(data_path)) paste0('- **Data Path**: ', data_path, '\n'), 
@@ -446,7 +445,7 @@ if(!is.null(amat)) paste0('- **Adjacency Matrix**: Saved in configuration.json\n
 # Includes: data, full workflow script, environment files, and Docker support.
 export_reproducible_package <- function(experiment_dir, data_df, data_path = NULL, 
                                         amat = NULL, epochs = 100, learning_rate = 0.01,
-                                        batch_size = 512, set_initial_weights = FALSE,
+                                        batch_size = 512,
                                         X_var = NULL, Y_var = NULL,
                                         x_treated = 1, x_control = 0) {
   pkg_vars <- colnames(data_df)
@@ -626,7 +625,7 @@ cat("\\n=== Step 5: Fitting TRAM-DAG Model ===\\n")
 cat("  Epochs: ', epochs, '\\n")
 cat("  Learning Rate: ', learning_rate, '\\n")
 cat("  Batch Size: ', batch_size, '\\n")
-cat("  Initial Weights: ', if(set_initial_weights) "R-based" else "Random", '\\n")
+cat("  Initial Weights: Random\\n")
 
 # Split data (80/20)
 n <- nrow(df)
@@ -645,7 +644,7 @@ td_model <- TramDagModel$from_config(
   device = "auto",
   debug = FALSE,
   verbose = TRUE,
-  set_initial_weights = ', if(set_initial_weights) "TRUE" else "FALSE", ',
+  set_initial_weights = FALSE,
   initial_data = py_train
 )
 
@@ -806,7 +805,7 @@ torch
       paste0("- **Epochs**: ", epochs, "\n"),
       paste0("- **Learning Rate**: ", learning_rate, "\n"),
       paste0("- **Batch Size**: ", batch_size, "\n"),
-      paste0("- **Initial Weights**: ", if(set_initial_weights) "R-based" else "Random", "\n")
+      paste0("- **Initial Weights**: Random\n")
     )
   )
   
@@ -1033,7 +1032,7 @@ torch
       "  device = \"auto\",\n",
       "  debug = FALSE,\n",
       "  verbose = TRUE,\n",
-      "  set_initial_weights = ", if(set_initial_weights) "TRUE" else "FALSE", ",\n",
+      "  set_initial_weights = FALSE,\n",
       "  initial_data = py_train\n",
       ")\n",
       "\n",
@@ -1223,7 +1222,7 @@ This folder contains everything needed to reproduce the TRAM-DAG analysis on any
 - **Epochs**: ', epochs, '
 - **Learning Rate**: ', learning_rate, '
 - **Batch Size**: ', batch_size, '
-- **Initial Weights**: ', if(set_initial_weights) "R-based" else "Random", '
+- **Initial Weights**: Random
 
 ## How to Reproduce
 
@@ -1602,8 +1601,7 @@ create_tramdag_config <- function(df, amat, experiment_dir, data_types = NULL) {
 # Fit TRAM-DAG model
 fit_tramdag_model <- function(cfg, train_df, val_df = NULL, 
                               epochs = 100L, learning_rate = 0.01,
-                              batch_size = 512L, device = "auto",
-                              set_initial_weights = FALSE) {
+                              batch_size = 512L, device = "auto") {
   
   # Ensure config is up to date
   cfg$update()
@@ -1635,7 +1633,7 @@ fit_tramdag_model <- function(cfg, train_df, val_df = NULL,
       device = device,
       debug = FALSE,
       verbose = TRUE,
-      set_initial_weights = set_initial_weights,
+      set_initial_weights = FALSE,
       initial_data = py_train
     )
   }, error = function(e) {
@@ -1988,7 +1986,7 @@ capture_matplotlib_plot <- function(plot_func, width = 1200, height = 500) {
 # Generate comprehensive PDF report with full analysis
 generate_pdf_report <- function(experiment_dir, data_df, amat, 
                                experiment_name, epochs, learning_rate, 
-                               batch_size, set_initial_weights,
+                               batch_size,
                                td_model = NULL, ate_result = NULL,
                                model_interpretation = NULL, 
                                ate_interpretation = NULL,
@@ -2360,7 +2358,7 @@ generate_pdf_report <- function(experiment_dir, data_df, amat,
       "<b>Training Epochs:</b> ", epochs, "<br/>",
       "<b>Learning Rate:</b> ", learning_rate, "<br/>",
       "<b>Batch Size:</b> ", batch_size, "<br/>",
-      "<b>Initial Weights:</b> ", ifelse(set_initial_weights, "R-based initialization", "Random initialization")
+      "<b>Initial Weights:</b> Random initialization"
     )
     story <- c(story, list(Paragraph(params_text, body_style)))
     
@@ -3524,9 +3522,6 @@ ui <- fluidPage(
       numericInput("batch_size", "Batch Size", 
                    value = 512, min = 32, step = 32),
       
-      checkboxInput("set_initial_weights", 
-                    "Initialize with R-based weights", value = FALSE),
-      
       actionButton("btn_fit", "Fit TRAM-DAG Model", 
                    class = "btn-success btn-lg"),
       
@@ -4647,8 +4642,7 @@ server <- function(input, output, session) {
           val_df = val_df,
           epochs = input$epochs,
           learning_rate = input$learning_rate,
-          batch_size = input$batch_size,
-          set_initial_weights = input$set_initial_weights
+          batch_size = input$batch_size
         )
       }, error = function(fit_e) {
         # Check if this is the Shiny output error
@@ -4679,7 +4673,6 @@ server <- function(input, output, session) {
           epochs = input$epochs,
           learning_rate = input$learning_rate,
           batch_size = input$batch_size,
-          set_initial_weights = input$set_initial_weights,
           X_var = input$X_var,
           Y_var = input$Y_var,
           x_treated = input$x_treated,
@@ -4703,7 +4696,6 @@ server <- function(input, output, session) {
           epochs = input$epochs,
           learning_rate = input$learning_rate,
           batch_size = input$batch_size,
-          set_initial_weights = input$set_initial_weights,
           X_var = input$X_var,
           Y_var = input$Y_var,
           x_treated = input$x_treated,
@@ -4973,7 +4965,6 @@ server <- function(input, output, session) {
           epochs = input$epochs,
           learning_rate = input$learning_rate,
           batch_size = input$batch_size,
-          set_initial_weights = input$set_initial_weights,
           td_model = rv_td_model(),
           ate_result = rv_ate_result(),
           model_interpretation = rv_model_interpretation(),
@@ -5108,8 +5099,7 @@ server <- function(input, output, session) {
     # --- 3. Training configuration ---
     parts <- c(parts, paste0(
       "TRAINING CONFIG: epochs=", input$epochs, ", learning_rate=", input$learning_rate,
-      ", batch_size=", input$batch_size,
-      ", set_initial_weights=", input$set_initial_weights
+      ", batch_size=", input$batch_size
     ))
     
     # --- 4. Loss history (backs the loss plot) ---
@@ -5400,7 +5390,11 @@ server <- function(input, output, session) {
     
     msg_divs <- lapply(history, function(m) {
       role_label <- if (m$role == "user") "You" else "Assistant"
-      content_html <- gsub("\n\n", "</p><p>", m$content)
+      content_html <- m$content
+      content_html <- gsub("\\*\\*(.+?)\\*\\*", "<b>\\1</b>", content_html)
+      content_html <- gsub("\\*(.+?)\\*", "<i>\\1</i>", content_html)
+      content_html <- gsub("`([^`]+)`", "<code>\\1</code>", content_html)
+      content_html <- gsub("\n\n", "</p><p>", content_html)
       content_html <- gsub("\n", "<br>", content_html)
       div(class = paste("chat-msg", m$role),
           div(class = "chat-role", role_label),
