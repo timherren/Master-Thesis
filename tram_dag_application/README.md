@@ -35,12 +35,13 @@ Ollama runs in the background automatically after installation, you never need t
    - **Mac**: Press `Cmd + Space`, type **Terminal**, press Enter
    - **Windows**: Press `Win + R`, type **cmd**, press Enter
    - **Linux**: Open your terminal application
-2. Run:
+2. Choose where to download (e.g. your Desktop) and run:
    ```bash
+   cd ~/Desktop
    git clone https://github.com/timherren/Master-Thesis.git
    cd Master-Thesis/tram_dag_application
    ```
-3. On Mac/Linux, make the scripts executable:
+3. On Mac/Linux only, make the scripts executable (run this inside `tram_dag_application/`):
    ```bash
    chmod +x START_APP/start.command START_APP/start.sh STOP_APP/stop.command STOP_APP/stop.sh
    ```
@@ -51,20 +52,23 @@ Ollama runs in the background automatically after installation, you never need t
 
 ## Quick Start
 
+All commands below assume you are inside the `tram_dag_application/` folder.
+
 ### Mac
-1. Open the `START_APP` folder
+1. In Finder, navigate to `tram_dag_application/START_APP/`
 2. Double-click **`start.command`**
 3. Wait for the setup to complete (first launch takes 10–15 minutes)
 4. Your browser will open automatically to `http://localhost:3838`
 
 > **If macOS blocks the script** (only happens with ZIP downloads, not `git clone`):
-> Right-click → Open instead of double-clicking. If still blocked, run in Terminal:
+> Right-click → Open instead of double-clicking. If still blocked, open Terminal, navigate to the `tram_dag_application/` folder, and run:
 > ```bash
+> cd ~/Desktop/Master-Thesis/tram_dag_application
 > xattr -cr START_APP/ STOP_APP/
 > ```
 
 ### Windows
-1. Open the `START_APP` folder
+1. In File Explorer, navigate to `tram_dag_application\START_APP\`
 2. Double-click **`start.bat`**
 3. Wait for the setup to complete (first launch takes 10–15 minutes)
 4. Your browser will open automatically to `http://localhost:3838`
@@ -73,7 +77,10 @@ Ollama runs in the background automatically after installation, you never need t
 > Click "More info" → "Run anyway".
 
 ### Linux
-1. Open a terminal in this folder
+1. Open a terminal and navigate to the `tram_dag_application/` folder:
+   ```bash
+   cd ~/Desktop/Master-Thesis/tram_dag_application
+   ```
 2. Run: `./START_APP/start.sh`
 3. Wait for the setup to complete (first launch takes 10–15 minutes)
 4. Your browser will open automatically to `http://localhost:3838`
@@ -91,9 +98,11 @@ The start script automatically:
 
 ## Stopping the App
 
-- **Mac**: Double-click **`STOP_APP/stop.command`**
-- **Windows**: Double-click **`STOP_APP\stop.bat`**
-- **Linux**: Run `STOP_APP/stop.sh`
+Inside the `tram_dag_application/` folder:
+
+- **Mac**: In Finder, open `STOP_APP/` and double-click **`stop.command`**
+- **Windows**: In File Explorer, open `STOP_APP\` and double-click **`stop.bat`**
+- **Linux**: Run `./STOP_APP/stop.sh` from the `tram_dag_application/` folder
 
 This stops the Shiny app container. Ollama continues running in the background (no re-download needed on next start).
 

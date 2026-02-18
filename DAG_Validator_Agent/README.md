@@ -33,12 +33,13 @@ Ollama runs in the background automatically after installation, you never need t
    - **Mac**: Press `Cmd + Space`, type **Terminal**, press Enter
    - **Windows**: Press `Win + R`, type **cmd**, press Enter
    - **Linux**: Open your terminal application
-2. Run:
+2. Choose where to download (e.g. your Desktop) and run:
    ```bash
+   cd ~/Desktop
    git clone https://github.com/timherren/Master-Thesis.git
    cd Master-Thesis/DAG_Validator_Agent
    ```
-3. On Mac/Linux, make the scripts executable:
+3. On Mac/Linux only, make the scripts executable (run this inside `DAG_Validator_Agent/`):
    ```bash
    chmod +x RUN_APP/start.command RUN_APP/start.sh STOP_APP/stop.command STOP_APP/stop.sh
    ```
@@ -49,22 +50,25 @@ Ollama runs in the background automatically after installation, you never need t
 
 ## Quick Start
 
+All commands below assume you are inside the `DAG_Validator_Agent/` folder.
+
 ### Mac
 
-1. Open the `RUN_APP` folder
+1. In Finder, navigate to `DAG_Validator_Agent/RUN_APP/`
 2. Double-click **`start.command`**
 3. Wait for the setup to complete (first launch takes a few minutes)
 4. Your browser will open automatically to `http://localhost:3838`
 
 > **If macOS blocks the script** (only happens with ZIP downloads, not `git clone`):
-> Right-click → Open instead of double-clicking. If still blocked, run in Terminal:
+> Right-click → Open instead of double-clicking. If still blocked, open Terminal, navigate to the `DAG_Validator_Agent/` folder, and run:
 > ```bash
+> cd ~/Desktop/Master-Thesis/DAG_Validator_Agent
 > xattr -cr RUN_APP/ STOP_APP/
 > ```
 
 ### Windows
 
-1. Open the `RUN_APP` folder
+1. In File Explorer, navigate to `DAG_Validator_Agent\RUN_APP\`
 2. Double-click **`start.bat`**
 3. Wait for the setup to complete (first launch takes a few minutes)
 4. Your browser will open automatically to `http://localhost:3838`
@@ -74,7 +78,10 @@ Ollama runs in the background automatically after installation, you never need t
 
 ### Linux
 
-1. Open a terminal in this folder
+1. Open a terminal and navigate to the `DAG_Validator_Agent/` folder:
+   ```bash
+   cd ~/Desktop/Master-Thesis/DAG_Validator_Agent
+   ```
 2. Run: `./RUN_APP/start.sh`
 3. Wait for the setup to complete (first launch takes a few minutes)
 4. Your browser will open automatically to `http://localhost:3838`
@@ -92,9 +99,11 @@ The start script automatically:
 
 ## Stopping the App
 
-- **Mac**: Double-click **`STOP_APP/stop.command`**
-- **Windows**: Double-click **`STOP_APP\stop.bat`**
-- **Linux**: Run `./STOP_APP/stop.sh`
+Inside the `DAG_Validator_Agent/` folder:
+
+- **Mac**: In Finder, open `STOP_APP/` and double-click **`stop.command`**
+- **Windows**: In File Explorer, open `STOP_APP\` and double-click **`stop.bat`**
+- **Linux**: Run `./STOP_APP/stop.sh` from the `DAG_Validator_Agent/` folder
 
 This stops the Shiny app container. Ollama continues running in the background (no re-download needed on next start).
 
