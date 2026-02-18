@@ -1,4 +1,4 @@
-# Master Thesis — Applications for Causal Analysis
+# Master Thesis  Applications for Causal Analysis
 
 This repository contains applications developed as part of my Master's thesis on causal inference.
 
