@@ -1,0 +1,9 @@
+# Experiment output (user-generated, not tracked)
+output/
+
+# macOS
+.DS_Store
+
+# Override repo-level "data/" ignore so sample data is committed
+!Data/
+!Data/**

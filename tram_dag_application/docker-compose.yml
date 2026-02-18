@@ -1,0 +1,33 @@
+# ============================================================
+# docker-compose.yml — TRAM-DAG Causal Analysis Application
+#
+# Usage:
+#   Double-click start.command (Mac), start.bat (Windows),
+#   or start.sh (Linux).
+#   Or manually:  docker compose up --build
+#   Open http://localhost:3838
+#
+# Ollama runs natively on the host (not in Docker) so it can
+# use the GPU. The start scripts handle launching Ollama
+# automatically. The Shiny app connects to Ollama on the host
+# via host.docker.internal.
+#
+# Experiment results are saved to the ./output/ folder.
+# ============================================================
+
+services:
+
+  # ---------- TRAM-DAG Shiny app ----------
+  app:
+    build: .
+    ports:
+      - "3838:3838"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      TRAMDAG_PYTHON: /opt/conda/envs/tramdag/bin/python3
+      LD_PRELOAD: /opt/conda/envs/tramdag/lib/libstdc++.so.6
+      OLLAMA_URL: http://host.docker.internal:11434
+      OLLAMA_MODEL: llama3.2
+    volumes:
+      - ./output:/root/Downloads

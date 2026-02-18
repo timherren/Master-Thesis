@@ -1,0 +1,32 @@
+# Data files — users upload their own via the app
+*.csv
+
+# Environment / secrets
+.env
+
+# Docker files (not needed inside the image)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Scripts
+start.command
+start.bat
+start.sh
+stop.command
+stop.bat
+stop.sh
+_dev_run_locally.R
+
+# Documentation
+*.md
+README*
+
+# R project artifacts
+*.Rproj
+.Rproj.user
+.Rhistory
+.RData
+
+# Output folder
+output/
