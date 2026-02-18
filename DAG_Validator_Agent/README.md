@@ -8,8 +8,8 @@ An interactive Shiny application for validating causal DAGs using conditional in
 
 Install these two applications (one-time setup):
 
-1. **Docker Desktop** — [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
-2. **Ollama** — [ollama.com/download](https://ollama.com/download)
+1. **Docker Desktop** [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
+2. **Ollama** [ollama.com/download](https://ollama.com/download)
 
 | Platform | Docker | Ollama |
 |----------|--------|--------|
@@ -21,7 +21,7 @@ Make sure Docker is **running** before launching the app:
 - **Mac / Windows**: Open Docker Desktop and wait for the whale icon to stop animating.
 - **Linux**: Run `sudo systemctl start docker` (or enable it at boot with `sudo systemctl enable docker`).
 
-Ollama runs in the background automatically after installation — you never need to open it manually.
+Ollama runs in the background automatically after installation, you never need to open it manually.
 
 ---
 
@@ -73,7 +73,7 @@ This stops the Shiny app container. Ollama continues running in the background (
 
 A sample dataset is included in the **`Data/`** folder for testing:
 
-- **`cd3cd28.xls`** — Sachs et al. (2005) flow cytometry dataset (1000 observations, 11 signaling proteins: Raf, Mek, PLCg, PIP2, PIP3, Erk, Akt, PKA, PKC, p38, JNK)
+- **`cd3cd28.xls`** Sachs et al. (2005) flow cytometry dataset (1000 observations, 11 signaling proteins: Raf, Mek, PLCg, PIP2, PIP3, Erk, Akt, PKA, PKC, p38, JNK)
 
 Upload this file in the app to try out DAG validation with a well-known causal discovery benchmark.
 
@@ -81,12 +81,12 @@ Upload this file in the app to try out DAG validation with a well-known causal d
 
 ## Using the App
 
-1. **Upload your data** — CSV or Excel file with numeric columns (or use the sample data from the `Data/` folder)
-2. **Preprocessing** — optionally apply log transform or z-score standardization
-3. **Define a DAG** — manually draw edges in the visual editor, upload an adjacency matrix, or let the LLM propose one
-4. **Run CI tests** — the app tests all conditional independencies implied by your DAG against the data
-5. **Review results** — plots show which CI statements hold and which are rejected
-6. **Export a report** — download a ZIP with a PDF report, the data, and a reproducible R script
+1. **Upload your data** CSV or Excel file with numeric columns (or use the sample data from the `Data/` folder)
+2. **Preprocessing** optionally apply log transform or z-score standardization
+3. **Define a DAG** manually draw edges in the visual editor, upload an adjacency matrix, or let the LLM propose one
+4. **Run CI tests** the app tests all conditional independencies implied by your DAG against the data
+5. **Review results** plots show which CI statements hold and which are rejected
+6. **Export a report** download a ZIP with a PDF report, the data, and a reproducible R script
 
 ---
 
@@ -99,19 +99,19 @@ Upload this file in the app to try out DAG validation with a well-known causal d
 | "Ollama is not installed" | Install Ollama from [ollama.com/download](https://ollama.com/download) |
 | LLM features are slow | Make sure Ollama is installed natively (not only inside Docker) |
 | App doesn't open after 3 minutes | Run `docker compose logs -f` in a terminal to check progress |
-| Browser shows connection error | Wait a moment and refresh — the app may still be starting |
+| Browser shows connection error | Wait a moment and refresh, the app may still be starting |
 
 ---
 
 ## For Developers
 
-To apply code changes, edit the files and double-click the start script again — it rebuilds automatically.
+To apply code changes, edit the files and double-click the start script again, it rebuilds automatically.
 
 Key files:
-- `app.R` — main Shiny UI and server logic
-- `R/` — helper modules (CI testing, DAG utilities, LLM calls, plotting)
-- `report_template.Rmd` — PDF report template
-- `docker-compose.yml` — container config (Shiny app only; Ollama runs natively)
+- `app.R` main Shiny UI and server logic
+- `R/` helper modules (CI testing, DAG utilities, LLM calls, plotting)
+- `report_template.Rmd` PDF report template
+- `docker-compose.yml` container config (Shiny app only; Ollama runs natively)
 
 ### Architecture
 
