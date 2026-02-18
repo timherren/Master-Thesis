@@ -10,20 +10,20 @@ An interactive Shiny application for fitting TRAM-DAG models, performing interve
 
 Install these two applications (one-time setup):
 
-1. **Docker Desktop** — [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
-2. **Ollama** (optional) — [ollama.com/download](https://ollama.com/download)
+1. **Docker Desktop**  [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
+2. **Ollama** (optional)  [ollama.com/download](https://ollama.com/download)
 
 | Platform | Docker | Ollama |
 |----------|--------|--------|
-| **Mac** | Download `.dmg`, drag to Applications, open once | Download `.dmg`, drag to Applications — runs automatically in background |
-| **Windows** | Download installer, follow prompts, open once | Download installer, follow prompts — runs automatically as a service |
+| **Mac** | Download `.dmg`, drag to Applications, open once | Download `.dmg`, drag to Applications, runs automatically in background |
+| **Windows** | Download installer, follow prompts, open once | Download installer, follow prompts, runs automatically as a service |
 | **Linux** | [Install Docker Engine](https://docs.docker.com/engine/install/) + `sudo systemctl start docker` | `curl -fsSL https://ollama.com/install.sh \| sh` |
 
 Make sure Docker is **running** before launching the app:
 - **Mac / Windows**: Open Docker Desktop and wait for the whale icon to stop animating.
 - **Linux**: Run `sudo systemctl start docker` (or enable it at boot with `sudo systemctl enable docker`).
 
-Ollama runs in the background automatically after installation — you never need to open it manually. The app works fully without Ollama; AI text interpretations are just disabled.
+Ollama runs in the background automatically after installation, you never need to open it manually. The app works fully without Ollama; AI text interpretations are just disabled.
 
 ---
 
@@ -134,17 +134,17 @@ The start scripts handle everything automatically, just make sure Ollama is inst
 
 After fitting a model, you can ask the built-in chatbot (step 9 in the sidebar) questions about your results. The LLM is **not** a generic assistant — it has access to the actual values from your analysis and can provide data-backed answers. Specifically, each prompt includes:
 
-- **Data summary** — variable names, dimensions, per-variable mean/sd/min/max/median, and the full correlation matrix
-- **DAG structure** — all edges with their types, source/intermediate/sink node classification
-- **Training configuration** — epochs, learning rate, batch size
-- **Loss history** — per-variable training and validation loss trajectories (start, end, minimum, best epoch)
-- **Learned parameters** — final linear shift coefficients and intercept value ranges per variable
-- **Negative log-likelihood (NLL)** — overall model fit quality
-- **Observational sampling** — per-variable comparison of model-generated samples vs held-out test data (means and standard deviations)
-- **ATE result** — treatment/outcome variables, intervention values, computed ATE, mean outcomes under treatment and control
-- **Interventional sampling** — per-variable distribution shifts between treatment and control conditions
+- **Data summary** variable names, dimensions, per-variable mean/sd/min/max/median, and the full correlation matrix
+- **DAG structure** all edges with their types, source/intermediate/sink node classification
+- **Training configuration** epochs, learning rate, batch size
+- **Loss history** per-variable training and validation loss trajectories (start, end, minimum, best epoch)
+- **Learned parameters** final linear shift coefficients and intercept value ranges per variable
+- **Negative log-likelihood (NLL)** overall model fit quality
+- **Observational sampling** per-variable comparison of model-generated samples vs held-out test data (means and standard deviations)
+- **ATE result** treatment/outcome variables, intervention values, computed ATE, mean outcomes under treatment and control
+- **Interventional sampling** per-variable distribution shifts between treatment and control conditions
 
-Because the LLM runs entirely offline on your machine via Ollama, your data never leaves your device — making it safe for sensitive or confidential datasets. The trade-off is that responses are slower than cloud-based models, especially without a GPU, since the model runs locally with limited compute resources.
+Because the LLM runs entirely offline on your machine via Ollama, your data never leaves your device, making it safe for sensitive or confidential datasets. The trade-off is that responses are slower than cloud-based models, especially without a GPU, since the model runs locally with limited compute resources.
 
 ---
 
@@ -168,9 +168,9 @@ Because the LLM runs entirely offline on your machine via Ollama, your data neve
 To apply code changes, edit the files and run the start script again — it rebuilds automatically.
 
 Key files:
-- `app.R` — main Shiny UI and server logic
-- `docker-compose.yml` — container config (Shiny app only; Ollama runs natively)
-- `Dockerfile` — app image definition (R + Python/tramdag environment)
+- `app.R` main Shiny UI and server logic
+- `docker-compose.yml` container config (Shiny app only; Ollama runs natively)
+- `Dockerfile` app image definition (R + Python/tramdag environment)
 
 ### Architecture
 
