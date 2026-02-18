@@ -118,9 +118,9 @@ output/
 
 The experiment folder contains two subfolders for reproducing results:
 
-- **`scripts/`** — Loads the already-fitted model from the experiment directory and reruns sampling and ATE computation. Use this to quickly explore different interventions or sample sizes without re-training. Requires the experiment folder and its model files to be present.
+- **`scripts/`** Loads the already-fitted model from the experiment directory and reruns sampling and ATE computation. Use this to quickly explore different interventions or sample sizes without re-training. Requires the experiment folder and its model files to be present.
 
-- **`reproducible_package/`** — A fully self-contained package that reproduces the entire analysis from scratch on any computer. Includes a copy of the dataset (`data.csv`) and a complete workflow script (`full_workflow.R`) that sets up the configuration, re-fits the model, and runs all analyses. Use this to share your work or reproduce results independently of the original experiment folder.
+- **`reproducible_package/`** A fully self-contained package that reproduces the entire analysis from scratch on any computer. Includes a copy of the dataset (`data.csv`) and a complete workflow script (`full_workflow.R`) that sets up the configuration, re-fits the model, and runs all analyses. Use this to share your work or reproduce results independently of the original experiment folder.
 
 ---
 
@@ -132,7 +132,7 @@ The start scripts handle everything automatically, just make sure Ollama is inst
 
 ### Interactive Chatbot
 
-After fitting a model, you can ask the built-in chatbot (step 9 in the sidebar) questions about your results. The LLM is **not** a generic assistant — it has access to the actual values from your analysis and can provide data-backed answers. Specifically, each prompt includes:
+After fitting a model, you can ask the built-in chatbot (step 9 in the sidebar) questions about your results. The LLM is **not** a generic assistant, it has access to the actual values from your analysis and can provide data-backed answers. Specifically, each prompt includes:
 
 - **Data summary** variable names, dimensions, per-variable mean/sd/min/max/median, and the full correlation matrix
 - **DAG structure** all edges with their types, source/intermediate/sink node classification
@@ -165,7 +165,7 @@ Because the LLM runs entirely offline on your machine via Ollama, your data neve
 
 ## For Developers
 
-To apply code changes, edit the files and run the start script again — it rebuilds automatically.
+To apply code changes, edit the files and run the start script again, it rebuilds automatically.
 
 Key files:
 - `app.R` main Shiny UI and server logic
