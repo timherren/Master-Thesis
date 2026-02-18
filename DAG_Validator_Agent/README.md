@@ -13,8 +13,8 @@ Install these two applications (one-time setup):
 
 | Platform | Docker | Ollama |
 |----------|--------|--------|
-| **Mac** | Download `.dmg`, drag to Applications, open once | Download `.dmg`, drag to Applications — runs automatically in background |
-| **Windows** | Download installer, follow prompts, open once | Download installer, follow prompts — runs automatically as a service |
+| **Mac** | Download `.dmg`, drag to Applications, open once | Download `.dmg`, drag to Applications, runs automatically in background |
+| **Windows** | Download installer, follow prompts, open once | Download installer, follow prompts, runs automatically as a service |
 | **Linux** | [Install Docker Engine](https://docs.docker.com/engine/install/) + `sudo systemctl start docker` | `curl -fsSL https://ollama.com/install.sh \| sh` |
 
 Make sure Docker is **running** before launching the app:
