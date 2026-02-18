@@ -72,7 +72,7 @@ This stops the Shiny app container. Ollama continues running in the background (
 
 A sample dataset is included in the **`Data/`** folder for testing:
 
-- **`continous_3_vars_dgp_100k.csv`** — Simulated data from a linear DGP with 100,000 observations and 3 continuous variables (x1, x2, x3) connected by LinearShift edges: x1 → x2, x1 → x3, x2 → x3.
+- **`continous_3_vars_dgp_100k.csv`** Simulated data from a linear DGP with 100,000 observations and 3 continuous variables (x1, x2, x3) connected by LinearShift edges: x1 → x2, x1 → x3, x2 → x3.
 
 Upload this file in the app to try out TRAM-DAG model fitting and causal inference.
 
@@ -80,13 +80,13 @@ Upload this file in the app to try out TRAM-DAG model fitting and causal inferen
 
 ## Using the App
 
-1. **Upload your data** — CSV file with numeric columns (or use the sample data from the `Data/` folder)
-2. **Define the DAG** — Use the default DAG, upload an adjacency matrix, or draw one manually in the visual editor
-3. **Fit the model** — Configure training parameters (epochs, learning rate, batch size) and click "Fit TRAM-DAG Model"
-4. **Explore results** — View fit diagnostics (loss curves, parameter convergence)
-5. **Sample & intervene** — Perform observational and interventional sampling (do-calculus)
-6. **Compute ATE** — Select treatment/outcome variables and compute Average Treatment Effects
-7. **Export** — All results are saved to the `output/` folder with reproducible R scripts
+1. **Upload your data** CSV file with numeric columns (or use the sample data from the `Data/` folder)
+2. **Define the DAG** Use the default DAG, upload an adjacency matrix, or draw one manually in the visual editor
+3. **Fit the model** Configure training parameters (epochs, learning rate, batch size) and click "Fit TRAM-DAG Model"
+4. **Explore results** View fit diagnostics (loss curves, parameter convergence)
+5. **Sample & intervene** Perform observational and interventional sampling (do-calculus)
+6. **Compute ATE** Select treatment/outcome variables and compute Average Treatment Effects
+7. **Export** All results are saved to the `output/` folder with reproducible R scripts
 
 ---
 
