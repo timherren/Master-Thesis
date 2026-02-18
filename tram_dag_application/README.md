@@ -2,7 +2,7 @@
 
 An interactive Shiny application for fitting TRAM-DAG models, performing interventional sampling, and computing Average Treatment Effects (ATE). The app includes a built-in LLM (via Ollama) that provides plain-language interpretations of model results.
 
-**Demo:** [Watch the application walkthrough on YouTube](https://youtu.be/W1DzQSLD3QI)
+**Demo:** [Watch the application walkthrough on YouTube (choose 4k resolution)](https://youtu.be/Vvbh9ZUrh-c)
 
 ---
 
