@@ -29,24 +29,37 @@ Ollama runs in the background automatically after installation, you never need t
 
 ### Mac
 
-1. Open the `RUN_APP` folder inside `shiny_dag_ci_app`
-2. Double-click **`start.command`**
-3. Wait for the setup to complete (first launch takes a few minutes)
-4. Your browser will open automatically to `http://localhost:3838`
+1. Open the `RUN_APP` folder
+2. **Right-click** (or Control-click) **`start.command`** and choose **"Open"**
+3. If macOS shows a security warning, click **"Open"** to confirm
+4. Wait for the setup to complete (first launch takes a few minutes)
+5. Your browser will open automatically to `http://localhost:3838`
+
+> **macOS security note:** macOS may block scripts downloaded from the internet. Always use **right-click → Open** instead of double-clicking. If that still doesn't work, open Terminal and run:
+> ```bash
+> chmod +x RUN_APP/start.command STOP_APP/stop.command
+> xattr -cr RUN_APP/ STOP_APP/
+> ```
+> Then right-click → Open again.
 
 ### Windows
 
-1. Open the `RUN_APP` folder inside `shiny_dag_ci_app`
+1. Open the `RUN_APP` folder
 2. Double-click **`start.bat`**
-3. Wait for the setup to complete (first launch takes a few minutes)
-4. Your browser will open automatically to `http://localhost:3838`
+3. If Windows SmartScreen shows "Windows protected your PC", click **"More info"** → **"Run anyway"**
+4. Wait for the setup to complete (first launch takes a few minutes)
+5. Your browser will open automatically to `http://localhost:3838`
+
+> **Windows note:** SmartScreen may block the script on first run because it was downloaded from the internet. Click "More info" → "Run anyway" to proceed. This only happens once.
 
 ### Linux
 
-1. Open a terminal in the `shiny_dag_ci_app` folder
+1. Open a terminal in this folder
 2. Run: `chmod +x RUN_APP/start.sh && ./RUN_APP/start.sh`
 3. Wait for the setup to complete (first launch takes a few minutes)
 4. Your browser will open automatically to `http://localhost:3838`
+
+> **Linux note:** If you get "Permission denied", make sure the script is executable: `chmod +x RUN_APP/start.sh`
 
 The start script automatically:
 - Checks that Docker and Ollama are installed and running
@@ -93,7 +106,10 @@ Upload this file in the app to try out DAG validation with a well-known causal d
 ## Troubleshooting
 
 | Problem | Solution |
-|---|---|
+|---------|----------|
+| macOS blocks `start.command` | Right-click → Open (not double-click). If still blocked, run `xattr -cr RUN_APP/ STOP_APP/` in Terminal |
+| Windows SmartScreen blocks `start.bat` | Click "More info" → "Run anyway" |
+| Linux "Permission denied" | Run `chmod +x RUN_APP/start.sh STOP_APP/stop.sh` |
 | "Docker is not installed" | Install Docker Desktop and restart |
 | "Docker is not running" | Open Docker Desktop and wait for it to finish starting |
 | "Ollama is not installed" | Install Ollama from [ollama.com/download](https://ollama.com/download) |
@@ -116,5 +132,5 @@ Key files:
 ### Architecture
 
 - **Shiny app** runs inside Docker (consistent R environment across platforms)
-- **Ollama** runs natively on the host machine (uses GPU for fast LLM inference) if we install LLM in docker we are forced to use CPU, which takes minutes to calculate
+- **Ollama** runs natively on the host machine (uses GPU for fast LLM inference). If Ollama were installed inside Docker, it would be forced to use CPU, which is significantly slower.
 - The Docker container connects to the host's Ollama via `host.docker.internal:11434`
