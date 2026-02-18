@@ -27,38 +27,56 @@ Ollama runs in the background automatically after installation, you never need t
 
 ---
 
+## Download
+
+**Recommended: Clone via Terminal** (avoids macOS/Windows security warnings):
+
+1. Open a terminal:
+   - **Mac**: Press `Cmd + Space`, type **Terminal**, press Enter
+   - **Windows**: Press `Win + R`, type **cmd**, press Enter
+   - **Linux**: Open your terminal application
+2. Run:
+   ```bash
+   git clone https://github.com/timherren/Master-Thesis.git
+   cd Master-Thesis/tram_dag_application
+   ```
+3. On Mac/Linux, make the scripts executable:
+   ```bash
+   chmod +x START_APP/start.command START_APP/start.sh STOP_APP/stop.command STOP_APP/stop.sh
+   ```
+
+**Alternative:** Download as ZIP from GitHub → Extract → see the security notes below if scripts are blocked.
+
+---
+
 ## Quick Start
 
 ### Mac
 1. Open the `START_APP` folder
-2. **Right-click** (or Control-click) **`start.command`** and choose **"Open"**
-3. If macOS shows a security warning, click **"Open"** to confirm
-4. Wait for the setup to complete (first launch takes 10–15 minutes)
-5. Your browser will open automatically to `http://localhost:3838`
+2. Double-click **`start.command`**
+3. Wait for the setup to complete (first launch takes 10–15 minutes)
+4. Your browser will open automatically to `http://localhost:3838`
 
-> **macOS security note:** macOS may block scripts downloaded from the internet. Always use **right-click → Open** instead of double-clicking. If that still doesn't work, open Terminal and run:
+> **If macOS blocks the script** (only happens with ZIP downloads, not `git clone`):
+> Right-click → Open instead of double-clicking. If still blocked, run in Terminal:
 > ```bash
-> chmod +x START_APP/start.command STOP_APP/stop.command
 > xattr -cr START_APP/ STOP_APP/
 > ```
-> Then right-click → Open again.
 
 ### Windows
 1. Open the `START_APP` folder
 2. Double-click **`start.bat`**
-3. If Windows SmartScreen shows "Windows protected your PC", click **"More info"** → **"Run anyway"**
-4. Wait for the setup to complete (first launch takes 10–15 minutes)
-5. Your browser will open automatically to `http://localhost:3838`
-
-> **Windows note:** SmartScreen may block the script on first run because it was downloaded from the internet. Click "More info" → "Run anyway" to proceed. This only happens once.
-
-### Linux
-1. Open a terminal in this folder
-2. Run: `chmod +x START_APP/start.sh && START_APP/start.sh`
 3. Wait for the setup to complete (first launch takes 10–15 minutes)
 4. Your browser will open automatically to `http://localhost:3838`
 
-> **Linux note:** If you get "Permission denied", make sure the script is executable: `chmod +x START_APP/start.sh`
+> **If Windows SmartScreen blocks the script** (only happens with ZIP downloads, not `git clone`):
+> Click "More info" → "Run anyway".
+
+### Linux
+1. Open a terminal in this folder
+2. Run: `./START_APP/start.sh`
+3. Wait for the setup to complete (first launch takes 10–15 minutes)
+4. Your browser will open automatically to `http://localhost:3838`
 
 The start script automatically:
 - Checks that Docker and Ollama are installed and running
@@ -165,8 +183,8 @@ Because the LLM runs entirely offline on your machine via Ollama, your data neve
 
 | Problem | Solution |
 |---------|----------|
-| macOS blocks `start.command` | Right-click → Open (not double-click). If still blocked, run `xattr -cr START_APP/ STOP_APP/` in Terminal |
-| Windows SmartScreen blocks `start.bat` | Click "More info" → "Run anyway" |
+| macOS blocks `start.command` (ZIP download only) | Run `xattr -cr START_APP/ STOP_APP/` in Terminal. Avoid this by using `git clone` instead |
+| Windows SmartScreen blocks `start.bat` (ZIP download only) | Click "More info" → "Run anyway". Avoid this by using `git clone` instead |
 | Linux "Permission denied" | Run `chmod +x START_APP/start.sh STOP_APP/stop.sh` |
 | "Docker is not installed" | Install Docker Desktop and restart |
 | "Docker is not running" | Open Docker Desktop and wait for it to finish starting |
