@@ -89,14 +89,14 @@ REM ---- Ensure models are pulled ----
 :model_check
 ollama list 2>nul | findstr /c:"%OLLAMA_MODEL%" >nul 2>&1
 if %errorlevel% neq 0 (
-    echo Pulling model %OLLAMA_MODEL% (~2 GB, one-time download) ...
+    echo Pulling model %OLLAMA_MODEL% ^(~2 GB, one-time download^) ...
     ollama pull %OLLAMA_MODEL%
 )
 echo Model %OLLAMA_MODEL% is ready.
 
 ollama list 2>nul | findstr /c:"%OLLAMA_DAG_MODEL%" >nul 2>&1
 if %errorlevel% neq 0 (
-    echo Pulling model %OLLAMA_DAG_MODEL% (DAG proposals) ...
+    echo Pulling model %OLLAMA_DAG_MODEL% ^(DAG proposals^) ...
     ollama pull %OLLAMA_DAG_MODEL%
 )
 echo Model %OLLAMA_DAG_MODEL% is ready.

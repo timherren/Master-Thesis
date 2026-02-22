@@ -74,7 +74,7 @@ echo Ollama server is running.
 REM Pull model if not available
 ollama list 2>nul | findstr /C:"%OLLAMA_MODEL%" >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
-    echo Pulling model '%OLLAMA_MODEL%' (first time only, ~2 GB) ...
+    echo Pulling model '%OLLAMA_MODEL%' ^(first time only, ~2 GB^) ...
     ollama pull %OLLAMA_MODEL%
 ) else (
     echo Model '%OLLAMA_MODEL%' is available.
@@ -95,10 +95,10 @@ echo   Then double-click this file again.
 :OLLAMA_DONE
 if "%OLLAMA_OK%"=="true" (
     echo.
-    echo Ollama is ready (GPU-accelerated). AI interpretations enabled.
+    echo Ollama is ready ^(GPU-accelerated^). AI interpretations enabled.
 ) else (
     echo.
-    echo Continuing without Ollama — the app works fully, AI text
+    echo Continuing without Ollama -- the app works fully, AI text
     echo summaries are just disabled.
 )
 echo.
@@ -123,7 +123,7 @@ set /a COUNTER+=1
 if %COUNTER% GTR 180 (
     echo.
     echo WARNING: App did not respond within 6 minutes.
-    echo It may still be starting — first-time build can be slow.
+    echo It may still be starting -- first-time build can be slow.
     echo Check status with:  docker compose logs -f
     echo When ready, open:   %APP_URL%
     echo.
