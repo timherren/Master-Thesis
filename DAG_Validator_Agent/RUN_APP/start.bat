@@ -1,6 +1,6 @@
 @echo off
 REM ============================================================
-REM start.bat — Double-click this file on Windows to launch
+REM start.bat -- Double-click this file on Windows to launch
 REM              the DAG Validator Agent
 REM ============================================================
 
@@ -12,7 +12,7 @@ set OLLAMA_DAG_MODEL=llama3.2:latest
 
 echo.
 echo ======================================================
-echo   DAG Validator Agent — Starting ...
+echo   DAG Validator Agent -- Starting ...
 echo ======================================================
 echo.
 
@@ -104,7 +104,7 @@ echo Model %OLLAMA_DAG_MODEL% is ready.
 REM ---- Build and start the Shiny app ----
 echo.
 echo Building and starting the app ...
-echo (First run takes a few minutes to set up the R environment.)
+echo First run takes a few minutes to set up the R environment.
 echo.
 
 docker compose up --build -d

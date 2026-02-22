@@ -1,13 +1,13 @@
 @echo off
 REM ============================================================
-REM stop.bat — Double-click this file on Windows to stop
+REM stop.bat -- Double-click this file on Windows to stop
 REM             the TRAM-DAG Causal Analysis Application
 REM ============================================================
 cd /d "%~dp0.."
 
 echo.
 echo ======================================================
-echo   TRAM-DAG Causal Analysis Application — Stopping ...
+echo   TRAM-DAG Causal Analysis Application -- Stopping ...
 echo ======================================================
 echo.
 

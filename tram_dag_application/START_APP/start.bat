@@ -1,7 +1,7 @@
 @echo off
 REM ============================================================
-REM start.bat — Double-click this file on Windows to launch
-REM             the TRAM-DAG Causal Analysis Application
+REM start.bat -- Double-click this file on Windows to launch
+REM              the TRAM-DAG Causal Analysis Application
 REM ============================================================
 cd /d "%~dp0.."
 
@@ -10,7 +10,7 @@ set OLLAMA_MODEL=llama3.2
 
 echo.
 echo ======================================================
-echo   TRAM-DAG Causal Analysis Application — Starting ...
+echo   TRAM-DAG Causal Analysis Application -- Starting ...
 echo ======================================================
 echo.
 
@@ -41,7 +41,7 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-REM ---- Start Ollama natively (GPU-accelerated) ----
+REM ---- Start Ollama natively ----
 set OLLAMA_OK=false
 
 where ollama >nul 2>&1
@@ -110,10 +110,17 @@ if not exist output mkdir output
 
 REM ---- Build and start Docker container ----
 echo Building and starting the app container ...
-echo (First run may take 10-15 min to download all dependencies.)
+echo First run may take 10-15 min to download all dependencies.
 echo.
 
 docker compose up --build -d
+if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo ERROR: docker compose failed. See messages above.
+    echo.
+    pause
+    exit /b 1
+)
 
 REM ---- Wait for the Shiny app to be reachable ----
 echo.
@@ -122,37 +129,37 @@ set /a COUNTER=0
 
 :WAIT_LOOP
 set /a COUNTER+=1
-if %COUNTER% GTR 180 (
-    echo.
-    echo WARNING: App did not respond within 6 minutes.
-    echo It may still be starting -- first-time build can be slow.
-    echo Check status with:  docker compose logs -f
-    echo When ready, open:   %APP_URL%
-    echo.
-    pause
-    exit /b 0
-)
-
+if %COUNTER% GTR 180 goto WAIT_TIMEOUT
 curl -sf %APP_URL% >nul 2>&1
-if %ERRORLEVEL% EQU 0 (
-    echo.
-    echo ======================================================
-    echo   App is ready!  Opening browser ...
-    echo   %APP_URL%
-    echo ======================================================
-    echo.
-    echo   Upload your CSV data file in the app to get started.
-    echo   Experiment results are saved to the .\output\ folder.
-    echo.
-    start %APP_URL%
-    echo To stop the app, double-click  STOP_APP\stop.bat
-    echo or run:  docker compose down
-    echo.
-    echo You can close this window.
-    pause
-    exit /b 0
-)
-
+if %ERRORLEVEL% EQU 0 goto APP_READY
 timeout /t 2 /nobreak >nul
-echo|set /p="."
+<nul set /p ="."
 goto WAIT_LOOP
+
+:APP_READY
+echo.
+echo ======================================================
+echo   App is ready!  Opening browser ...
+echo   %APP_URL%
+echo ======================================================
+echo.
+echo   Upload your CSV data file in the app to get started.
+echo   Experiment results are saved to the output folder.
+echo.
+start "" %APP_URL%
+echo To stop the app, double-click  STOP_APP\stop.bat
+echo or run:  docker compose down
+echo.
+echo You can close this window.
+pause
+exit /b 0
+
+:WAIT_TIMEOUT
+echo.
+echo WARNING: App did not respond within 6 minutes.
+echo It may still be starting -- first-time build can be slow.
+echo Check status with:  docker compose logs -f
+echo When ready, open:   %APP_URL%
+echo.
+pause
+exit /b 0
