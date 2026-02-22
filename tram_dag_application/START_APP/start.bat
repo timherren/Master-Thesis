@@ -4,12 +4,6 @@ REM start.bat -- Double-click this file on Windows to launch
 REM              the TRAM-DAG Causal Analysis Application
 REM ============================================================
 
-REM Keep the window open no matter what happens
-if "%~1"=="" (
-    cmd /k "%~f0" run
-    exit /b
-)
-
 cd /d "%~dp0.."
 
 set APP_URL=http://localhost:3838
@@ -170,3 +164,9 @@ echo When ready, open:   %APP_URL%
 echo.
 pause
 exit /b 0
+
+REM ---- Safety net: keep window open if script reaches here unexpectedly ----
+echo.
+echo Something unexpected happened. See messages above.
+echo.
+pause
