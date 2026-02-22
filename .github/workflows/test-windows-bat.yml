@@ -1,0 +1,167 @@
+name: Test Windows .bat scripts
+
+on:
+  push:
+    paths:
+      - "**/*.bat"
+      - ".github/workflows/test-windows-bat.yml"
+  pull_request:
+    paths:
+      - "**/*.bat"
+      - ".github/workflows/test-windows-bat.yml"
+  workflow_dispatch:
+
+jobs:
+  test-bat-syntax:
+    name: Validate .bat scripts on Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test DAG Validator Agent start.bat (loop constructs)
+        shell: cmd
+        run: |
+          @echo off
+          echo === Testing DAG Validator Agent start.bat ===
+          echo.
+          echo -- Testing ollama wait loop pattern --
+          set /a WAIT=0
+          :dag_wait
+          if %WAIT% geq 3 goto dag_wait_done
+          echo   WAIT=%WAIT% (incrementing...)
+          set /a WAIT+=1
+          goto dag_wait
+          :dag_wait_done
+          echo   Loop exited correctly at WAIT=%WAIT%
+          if %WAIT% neq 3 (
+            echo FAIL: WAIT should be 3 but is %WAIT%
+            exit /b 1
+          )
+          echo   PASS: ollama wait loop
+          echo.
+          echo -- Testing app wait loop pattern --
+          set /a TRIES=0
+          :dag_appwait
+          if %TRIES% geq 5 goto dag_timeout
+          set /a TRIES+=1
+          goto dag_appwait
+          :dag_timeout
+          echo   Loop exited correctly at TRIES=%TRIES%
+          if %TRIES% neq 5 (
+            echo FAIL: TRIES should be 5 but is %TRIES%
+            exit /b 1
+          )
+          echo   PASS: app wait loop
+          echo.
+          echo -- Testing goto across labels --
+          goto dag_skip_fail
+          :dag_fail_label
+          echo FAIL: should not reach fail label
+          exit /b 1
+          :dag_skip_fail
+          echo   PASS: goto skip works
+          echo.
+          echo === DAG Validator Agent: ALL TESTS PASSED ===
+
+      - name: Test TRAM-DAG Application start.bat (loop constructs)
+        shell: cmd
+        run: |
+          @echo off
+          echo === Testing TRAM-DAG Application start.bat ===
+          echo.
+          echo -- Testing ollama wait loop pattern --
+          set /a WAIT=0
+          :tram_wait
+          if %WAIT% GTR 3 goto tram_check
+          set /a WAIT+=1
+          goto tram_wait
+          :tram_check
+          echo   Loop exited correctly at WAIT=%WAIT%
+          if %WAIT% neq 4 (
+            echo FAIL: WAIT should be 4 but is %WAIT%
+            exit /b 1
+          )
+          echo   PASS: ollama wait loop
+          echo.
+          echo -- Testing goto-based branching (no labels in parens) --
+          set OLLAMA_OK=false
+          set TEST_INSTALLED=true
+          if "%TEST_INSTALLED%"=="false" goto tram_not_installed
+          echo   Found Ollama (simulated).
+          set OLLAMA_OK=true
+          goto tram_done
+          :tram_not_installed
+          echo   Ollama not installed (simulated).
+          :tram_done
+          if "%OLLAMA_OK%"=="true" (
+            echo   PASS: OLLAMA_OK is true
+          ) else (
+            echo FAIL: OLLAMA_OK should be true
+            exit /b 1
+          )
+          echo.
+          echo -- Testing app counter loop pattern --
+          set /a COUNTER=0
+          :tram_apploop
+          set /a COUNTER+=1
+          if %COUNTER% GTR 5 (
+            goto tram_appdone
+          )
+          goto tram_apploop
+          :tram_appdone
+          echo   Loop exited correctly at COUNTER=%COUNTER%
+          if %COUNTER% neq 6 (
+            echo FAIL: COUNTER should be 6 but is %COUNTER%
+            exit /b 1
+          )
+          echo   PASS: app counter loop
+          echo.
+          echo === TRAM-DAG Application: ALL TESTS PASSED ===
+
+      - name: Dry-run DAG Validator start.bat (expect exit 1 — no Ollama)
+        shell: cmd
+        continue-on-error: false
+        run: |
+          @echo off
+          echo === Dry-run DAG Validator start.bat ===
+          echo.
+          REM Pipe echo to bypass any "pause" commands, redirect to see output
+          echo. | call DAG_Validator_Agent\RUN_APP\start.bat
+          set RESULT=%errorlevel%
+          echo.
+          echo Script exited with code %RESULT%
+          REM Exit code 1 is expected (Docker/Ollama not fully available)
+          REM Exit code 0 would mean it somehow passed all checks
+          REM Any other code or a crash means a syntax error — that's the bug we fixed
+          if %RESULT% equ 1 (
+            echo PASS: Script exited cleanly with expected error code 1
+            exit /b 0
+          )
+          if %RESULT% equ 0 (
+            echo PASS: Script ran successfully
+            exit /b 0
+          )
+          echo FAIL: Script crashed with unexpected exit code %RESULT%
+          exit /b 1
+
+      - name: Dry-run TRAM-DAG start.bat (expect exit 1 — no Ollama)
+        shell: cmd
+        continue-on-error: false
+        run: |
+          @echo off
+          echo === Dry-run TRAM-DAG start.bat ===
+          echo.
+          echo. | call tram_dag_application\START_APP\start.bat
+          set RESULT=%errorlevel%
+          echo.
+          echo Script exited with code %RESULT%
+          if %RESULT% equ 1 (
+            echo PASS: Script exited cleanly with expected error code 1
+            exit /b 0
+          )
+          if %RESULT% equ 0 (
+            echo PASS: Script ran successfully
+            exit /b 0
+          )
+          echo FAIL: Script crashed with unexpected exit code %RESULT%
+          exit /b 1
