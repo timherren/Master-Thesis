@@ -88,17 +88,17 @@ exit /b 1
 REM ---- Ensure models are pulled ----
 :model_check
 ollama list 2>nul | findstr /c:"%OLLAMA_MODEL%" >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Pulling model %OLLAMA_MODEL% ^(~2 GB, one-time download^) ...
-    ollama pull %OLLAMA_MODEL%
-)
+if %errorlevel% equ 0 goto model1_ready
+echo Pulling model %OLLAMA_MODEL% - ~2 GB, one-time download ...
+ollama pull %OLLAMA_MODEL%
+:model1_ready
 echo Model %OLLAMA_MODEL% is ready.
 
 ollama list 2>nul | findstr /c:"%OLLAMA_DAG_MODEL%" >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Pulling model %OLLAMA_DAG_MODEL% ^(DAG proposals^) ...
-    ollama pull %OLLAMA_DAG_MODEL%
-)
+if %errorlevel% equ 0 goto model2_ready
+echo Pulling model %OLLAMA_DAG_MODEL% - DAG proposals ...
+ollama pull %OLLAMA_DAG_MODEL%
+:model2_ready
 echo Model %OLLAMA_DAG_MODEL% is ready.
 
 REM ---- Build and start the Shiny app ----
