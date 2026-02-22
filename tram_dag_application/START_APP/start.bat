@@ -45,48 +45,54 @@ REM ---- Start Ollama natively (GPU-accelerated) ----
 set OLLAMA_OK=false
 
 where ollama >nul 2>&1
-if %ERRORLEVEL% EQU 0 (
-    echo Found Ollama installation.
+if %ERRORLEVEL% NEQ 0 goto OLLAMA_NOT_INSTALLED
 
-    REM Check if Ollama is already running
-    curl -sf http://localhost:11434/api/tags >nul 2>&1
-    if %ERRORLEVEL% NEQ 0 (
-        echo Starting Ollama server ...
-        start /B ollama serve >nul 2>&1
-        REM Wait up to 15 seconds for it to become ready
-        set /a WAIT=0
-        :OLLAMA_WAIT
-        set /a WAIT+=1
-        if %WAIT% GTR 15 goto OLLAMA_CHECK
-        timeout /t 1 /nobreak >nul
-        curl -sf http://localhost:11434/api/tags >nul 2>&1
-        if %ERRORLEVEL% NEQ 0 goto OLLAMA_WAIT
-    )
+echo Found Ollama installation.
 
-    :OLLAMA_CHECK
-    curl -sf http://localhost:11434/api/tags >nul 2>&1
-    if %ERRORLEVEL% EQU 0 (
-        echo Ollama server is running.
+REM Check if Ollama is already running
+curl -sf http://localhost:11434/api/tags >nul 2>&1
+if %ERRORLEVEL% EQU 0 goto OLLAMA_CHECK
 
-        REM Pull model if not available
-        ollama list 2>nul | findstr /C:"%OLLAMA_MODEL%" >nul 2>&1
-        if %ERRORLEVEL% NEQ 0 (
-            echo Pulling model '%OLLAMA_MODEL%' (first time only, ~2 GB) ...
-            ollama pull %OLLAMA_MODEL%
-        ) else (
-            echo Model '%OLLAMA_MODEL%' is available.
-        )
-        set OLLAMA_OK=true
-    ) else (
-        echo WARNING: Could not start Ollama server.
-    )
+echo Starting Ollama server ...
+start /B ollama serve >nul 2>&1
+set /a WAIT=0
+
+:OLLAMA_WAIT
+if %WAIT% GTR 15 goto OLLAMA_CHECK
+timeout /t 1 /nobreak >nul
+curl -sf http://localhost:11434/api/tags >nul 2>&1
+if %ERRORLEVEL% EQU 0 goto OLLAMA_CHECK
+set /a WAIT+=1
+goto OLLAMA_WAIT
+
+:OLLAMA_CHECK
+curl -sf http://localhost:11434/api/tags >nul 2>&1
+if %ERRORLEVEL% NEQ 0 goto OLLAMA_FAILED
+
+echo Ollama server is running.
+
+REM Pull model if not available
+ollama list 2>nul | findstr /C:"%OLLAMA_MODEL%" >nul 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo Pulling model '%OLLAMA_MODEL%' (first time only, ~2 GB) ...
+    ollama pull %OLLAMA_MODEL%
 ) else (
-    echo WARNING: Ollama is not installed.
-    echo   To enable AI interpretations, install Ollama from:
-    echo   https://ollama.com/download
-    echo   Then double-click this file again.
+    echo Model '%OLLAMA_MODEL%' is available.
 )
+set OLLAMA_OK=true
+goto OLLAMA_DONE
 
+:OLLAMA_FAILED
+echo WARNING: Could not start Ollama server.
+goto OLLAMA_DONE
+
+:OLLAMA_NOT_INSTALLED
+echo WARNING: Ollama is not installed.
+echo   To enable AI interpretations, install Ollama from:
+echo   https://ollama.com/download
+echo   Then double-click this file again.
+
+:OLLAMA_DONE
 if "%OLLAMA_OK%"=="true" (
     echo.
     echo Ollama is ready (GPU-accelerated). AI interpretations enabled.

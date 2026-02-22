@@ -60,18 +60,20 @@ if %errorlevel% neq 0 (
 
 REM ---- Ensure Ollama is running ----
 curl -sf http://localhost:11434/ >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Starting Ollama ...
-    start /b ollama serve >nul 2>&1
-    set /a WAIT=0
-    :ollama_wait
-    if %WAIT% geq 30 goto ollama_fail
-    curl -sf http://localhost:11434/ >nul 2>&1
-    if %errorlevel% equ 0 goto ollama_ok
-    set /a WAIT+=1
-    timeout /t 1 /nobreak >nul
-    goto ollama_wait
-)
+if %errorlevel% equ 0 goto ollama_ok
+
+echo Starting Ollama ...
+start /b ollama serve >nul 2>&1
+set /a WAIT=0
+
+:ollama_wait
+if %WAIT% geq 30 goto ollama_fail
+curl -sf http://localhost:11434/ >nul 2>&1
+if %errorlevel% equ 0 goto ollama_ok
+set /a WAIT+=1
+timeout /t 1 /nobreak >nul
+goto ollama_wait
+
 :ollama_ok
 echo Ollama is running.
 goto model_check
