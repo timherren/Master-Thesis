@@ -4,6 +4,12 @@ REM start.bat -- Double-click this file on Windows to launch
 REM              the DAG Validator Agent
 REM ============================================================
 
+REM Keep the window open no matter what happens
+if "%~1"=="" (
+    cmd /k "%~f0" run
+    exit /b
+)
+
 cd /d "%~dp0\.."
 
 set APP_URL=http://localhost:3838
