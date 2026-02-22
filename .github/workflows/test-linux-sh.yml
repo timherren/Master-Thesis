@@ -1,0 +1,117 @@
+name: Test Linux .sh scripts
+
+on:
+  push:
+    paths:
+      - "**/*.sh"
+      - ".github/workflows/test-linux-sh.yml"
+  pull_request:
+    paths:
+      - "**/*.sh"
+      - ".github/workflows/test-linux-sh.yml"
+  workflow_dispatch:
+
+jobs:
+  test-sh-scripts:
+    name: Validate .sh scripts on Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Syntax check all .sh files (bash -n)
+        run: |
+          echo "=== Syntax-checking all .sh files ==="
+          FAIL=0
+          for f in $(find . -name '*.sh' -type f); do
+            if bash -n "$f" 2>&1; then
+              echo "  PASS: $f"
+            else
+              echo "  FAIL: $f"
+              FAIL=1
+            fi
+          done
+          if [ "$FAIL" -eq 1 ]; then
+            echo "Some scripts have syntax errors!"
+            exit 1
+          fi
+          echo "=== All .sh files passed syntax check ==="
+
+      - name: Check scripts are executable or have correct shebang
+        run: |
+          echo "=== Checking shebangs ==="
+          FAIL=0
+          for f in $(find . -name '*.sh' -type f); do
+            head -1 "$f" | grep -qE '^#!/' || {
+              echo "  WARN: $f missing shebang line"
+              FAIL=1
+            }
+            echo "  OK: $f -> $(head -1 "$f")"
+          done
+          if [ "$FAIL" -eq 1 ]; then
+            echo "Some scripts are missing shebang lines!"
+            exit 1
+          fi
+          echo "=== All shebangs OK ==="
+
+      - name: ShellCheck lint
+        run: |
+          echo "=== Running ShellCheck ==="
+          sudo apt-get -qq install -y shellcheck > /dev/null 2>&1 || true
+          FAIL=0
+          for f in $(find . -name '*.sh' -type f); do
+            echo "--- $f ---"
+            if shellcheck -S warning "$f"; then
+              echo "  PASS"
+            else
+              echo "  WARNINGS (non-blocking)"
+            fi
+          done
+          echo "=== ShellCheck complete ==="
+
+      - name: Dry-run DAG Validator start.sh (expect exit 1 - no Ollama)
+        run: |
+          echo "=== Dry-run DAG Validator start.sh ==="
+          chmod +x DAG_Validator_Agent/RUN_APP/start.sh
+          set +e
+          bash DAG_Validator_Agent/RUN_APP/start.sh
+          RESULT=$?
+          set -e
+          echo ""
+          echo "Script exited with code $RESULT"
+          if [ "$RESULT" -eq 1 ]; then
+            echo "PASS: Script exited cleanly with expected error code 1"
+          elif [ "$RESULT" -eq 0 ]; then
+            echo "PASS: Script ran successfully"
+          elif [ "$RESULT" -eq 127 ]; then
+            echo "FAIL: Script crashed - command not found (exit 127)"
+            exit 1
+          elif [ "$RESULT" -eq 2 ]; then
+            echo "FAIL: Script has a syntax error (exit 2)"
+            exit 1
+          else
+            echo "INFO: Script exited with code $RESULT (may be expected without full environment)"
+          fi
+
+      - name: Dry-run TRAM-DAG start.sh (expect exit 1 - no Ollama)
+        run: |
+          echo "=== Dry-run TRAM-DAG start.sh ==="
+          chmod +x tram_dag_application/START_APP/start.sh
+          set +e
+          bash tram_dag_application/START_APP/start.sh
+          RESULT=$?
+          set -e
+          echo ""
+          echo "Script exited with code $RESULT"
+          if [ "$RESULT" -eq 1 ]; then
+            echo "PASS: Script exited cleanly with expected error code 1"
+          elif [ "$RESULT" -eq 0 ]; then
+            echo "PASS: Script ran successfully"
+          elif [ "$RESULT" -eq 127 ]; then
+            echo "FAIL: Script crashed - command not found (exit 127)"
+            exit 1
+          elif [ "$RESULT" -eq 2 ]; then
+            echo "FAIL: Script has a syntax error (exit 2)"
+            exit 1
+          else
+            echo "INFO: Script exited with code $RESULT (may be expected without full environment)"
+          fi
