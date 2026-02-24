@@ -43,9 +43,16 @@ run_ci_tests <- function(amat, dat, tests = c("gcm", "pcm"), alpha = 0.05) {
       comets::comets(fm, dat, test = tst, coin = TRUE)$p.value
     }, numeric(1))
 
+    ci_labels <- vapply(tcis, function(ci) {
+      x <- if (length(ci$X) > 0) paste(ci$X, collapse = "+") else ""
+      y <- if (length(ci$Y) > 0) paste(ci$Y, collapse = "+") else ""
+      z <- if (length(ci$Z) > 0) paste(ci$Z, collapse = ", ") else "∅"
+      paste(x, "_||_", y, "|", z)
+    }, character(1))
+
     tibble::tibble(
       test        = tst,
-      CI          = vapply(tcis, paste, character(1)),
+      CI          = ci_labels,
       p.value     = pv,
       adj.p.value = stats::p.adjust(pv, "holm"),
       rejected    = stats::p.adjust(pv, "holm") < alpha

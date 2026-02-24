@@ -857,76 +857,19 @@ server <- function(input, output, session) {
     vars       <- rownames(A_base)
     if (is.null(vars)) vars <- colnames(A_base)
     layout_mat <- coords[vars, , drop = FALSE]
-
-    # Canonicaliser for matching CI strings back to DAG node names
-    canon <- function(x) {
-      x <- tolower(x)
-      x <- sub("_(ll|ul)$", "", x)
-      x <- gsub("[^a-z0-9]", "", x)
-      x
-    }
-    canon_vars <- canon(vars)
-    name_map   <- setNames(vars, canon_vars)
-
-    # Base DAG
-    g <- igraph::graph_from_adjacency_matrix(A_base, mode = "directed")
-    xlim <- range(layout_mat[, 1]) * 1.2
-    ylim <- range(layout_mat[, 2]) * 1.2
-
-    # Reserve space at the bottom for the legend
-    op <- par(mar = c(4, 1, 2, 1))
-    on.exit(par(op), add = TRUE)
-
-    plot(g,
-         main = "DAG with Rejected CIs",
-         vertex.label.cex = 1.1, vertex.size = 25,
-         edge.arrow.size = 0.4, layout = layout_mat,
-         rescale = FALSE, xlim = xlim, ylim = ylim)
-
-    # Overlay rejected CIs
-    rejs <- rv_ci()$rejected
-    has_rejections <- !is.null(rejs) && nrow(rejs) > 0
-
-    if (has_rejections) {
-      for (k in seq_len(nrow(rejs))) {
-        pair  <- parse_ci_pair(as.character(rejs$CI[k]))
-        X_raw <- pair[1]; Y_raw <- pair[2]
-        if (is.na(X_raw) || is.na(Y_raw)) next
-        Xc <- canon(X_raw); Yc <- canon(Y_raw)
-        if (!(Xc %in% names(name_map) && Yc %in% names(name_map))) next
-        X <- name_map[[Xc]]; Y <- name_map[[Yc]]
-        i <- match(X, vars); j <- match(Y, vars)
-        if (is.na(i) || is.na(j)) next
-        segments(
-          x0 = layout_mat[i, 1], y0 = layout_mat[i, 2],
-          x1 = layout_mat[j, 1], y1 = layout_mat[j, 2],
-          col = "red", lty = 1, lwd = 4
-        )
-      }
+    # Use the precomputed rejected-CI matrix directly to avoid
+    # fragile string parsing / name canonicalisation mismatches.
+    A_new <- rv_missing()
+    if (!is.null(A_new)) {
+      A_new <- A_new[vars, vars, drop = FALSE]
     }
 
-    # Legend — drawn in the bottom margin so it's always visible
-    leg_labels <- "DAG edges"
-    leg_col    <- "black"
-    leg_lty    <- 1
-    leg_lwd    <- 2
-    if (has_rejections) {
-      leg_labels <- c(leg_labels, "Rejected CIs")
-      leg_col    <- c(leg_col, "red")
-      leg_lty    <- c(leg_lty, 1)
-      leg_lwd    <- c(leg_lwd, 4)
-    }
-    par(xpd = TRUE)
-    legend("bottom",
-           legend  = leg_labels,
-           col     = leg_col,
-           lty     = leg_lty,
-           lwd     = leg_lwd,
-           bg      = "white",
-           box.col = "grey80",
-           cex     = 0.95,
-           horiz   = TRUE,
-           inset   = c(0, -0.15))
+    plot_dag_with_annotations(
+      amat_base = A_base,
+      amat_new  = A_new,
+      main      = "DAG with Rejected CIs",
+      layout    = layout_mat
+    )
   })
 
 
