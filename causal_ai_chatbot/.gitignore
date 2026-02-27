@@ -1,0 +1,50 @@
+# Environment and secrets
+.env
+
+# Python caches and tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS/editor files
+.DS_Store
+
+# Runtime outputs (generated at run-time)
+app/runtime/
+uploads/
+reports/
+temp_plots/
+mcp_artifacts_cache/
+# Environment variables
+.env
+.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Uploads and experiments
+uploads/
+experiments/
+reports/
+temp_plots/
+mcp_artifacts_cache/
+app/runtime/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

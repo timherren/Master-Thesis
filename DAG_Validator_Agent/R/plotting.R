@@ -70,20 +70,32 @@ plot_dag_with_annotations <- function(amat_base,
 
   # 3) Overlay CI-tested pairs as red dotted lines (undirected)
   if (!is.null(amat_testable)) {
-    ci_vars <- rownames(amat_testable)
-    if (is.null(ci_vars)) ci_vars <- colnames(amat_testable)
+    test_rows <- rownames(amat_testable)
+    test_cols <- colnames(amat_testable)
+    # Align tested-CI matrix to the plotted DAG node order to avoid
+    # index/order drift between matrices and layout coordinates.
+    if (!is.null(test_rows) && !is.null(test_cols) &&
+        all(vars %in% test_rows) && all(vars %in% test_cols)) {
+      A_test <- amat_testable[vars, vars, drop = FALSE]
+    } else {
+      A_test <- amat_testable
+    }
 
-    for (i in seq_len(nrow(amat_testable))) {
-      for (j in seq_len(ncol(amat_testable))) {
-        if (i < j && amat_testable[i, j] == 1L) {
-          v1 <- rownames(amat_testable)[i]
-          v2 <- colnames(amat_testable)[j]
-          if (v1 %in% vars && v2 %in% vars) {
-            idx1 <- match(v1, vars)
-            idx2 <- match(v2, vars)
+    lay_names <- rownames(lay)
+    if (!is.null(lay_names) && all(vars %in% lay_names)) {
+      lay_aligned <- lay[vars, , drop = FALSE]
+    } else {
+      lay_aligned <- lay
+    }
+
+    n_test <- min(nrow(A_test), ncol(A_test), nrow(lay_aligned))
+    if (n_test >= 2) {
+      for (i in seq_len(n_test)) {
+        for (j in seq_len(n_test)) {
+          if (i < j && isTRUE(A_test[i, j] == 1L)) {
             segments(
-              x0 = lay[idx1, 1], y0 = lay[idx1, 2],
-              x1 = lay[idx2, 1], y1 = lay[idx2, 2],
+              x0 = lay_aligned[i, 1], y0 = lay_aligned[i, 2],
+              x1 = lay_aligned[j, 1], y1 = lay_aligned[j, 2],
               col = "red", lty = 3, lwd = 2
             )
           }

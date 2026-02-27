@@ -1,0 +1,49 @@
+name: Chatbot CI (Linux)
+
+on:
+  push:
+    paths:
+      - "causal_ai_chatbot/**"
+      - ".github/workflows/chatbot-ci-linux.yml"
+  pull_request:
+    paths:
+      - "causal_ai_chatbot/**"
+      - ".github/workflows/chatbot-ci-linux.yml"
+  workflow_dispatch:
+
+jobs:
+  chatbot-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install chatbot dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r causal_ai_chatbot/requirements_chatbot.txt
+
+      - name: Run chatbot tests
+        run: |
+          python -m pytest causal_ai_chatbot/tests -q
+
+      - name: Validate Linux launcher scripts syntax
+        run: |
+          bash -n causal_ai_chatbot/START_APP/start.sh
+          bash -n causal_ai_chatbot/STOP_APP/stop.sh
+
+      - name: Dry-run Linux start script (allow env-dependent exits)
+        run: |
+          set +e
+          bash causal_ai_chatbot/START_APP/start.sh
+          CODE=$?
+          set -e
+          echo "start.sh exit code: $CODE"
+          if [ "$CODE" -ne 0 ] && [ "$CODE" -ne 1 ]; then
+            echo "Unexpected exit code from start.sh"
+            exit 1
+          fi
