@@ -4,12 +4,12 @@ A conversational AI agent that guides users through causal inference workflows, 
 
 ## Features
 
-- 🤖 **AI-Powered DAG Proposal**: LLM suggests causal structures from variable names
-- ✅ **DAG Consistency Testing**: Validates DAGs against data using CI tests
-- 🔄 **Interactive Revisions**: Agent suggests DAG improvements based on test results
-- 📊 **TRAM-DAG Model Fitting**: Fits probabilistic causal models
-- 💬 **Causal Query Answering**: Answers association, intervention, and counterfactual questions
-- 📝 **Reproducible Reports**: Generates complete analysis reports with code
+- **AI-Powered DAG Proposal**: LLM suggests causal structures from variable names
+- **DAG Consistency Testing**: Validates DAGs against data using CI tests
+- **Interactive Revisions**: Agent suggests DAG improvements based on test results
+- **TRAM-DAG Model Fitting**: Fits probabilistic causal models
+- **Causal Query Answering**: Answers association, intervention, and counterfactual questions
+- **Reproducible Reports**: Generates complete analysis reports with code
 
 ## Prerequisites
 
@@ -194,7 +194,7 @@ User: Yes, please test it.
 
 Agent: Testing DAG consistency...
        
-       ✅ The DAG appears consistent with the data!
+       The DAG appears consistent with the data.
        
        Should I proceed with fitting the model?
 
@@ -202,7 +202,7 @@ User: Yes, fit the model.
 
 Agent: Fitting TRAM-DAG model... This may take a few minutes.
        
-       ✅ Model fitted successfully!
+       Model fitted successfully.
        
        You can now ask causal questions.
 
