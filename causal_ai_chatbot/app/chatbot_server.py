@@ -1159,7 +1159,8 @@ Rscript run_complete_workflow.R
                 if img_path.exists():
                     with open(img_path, 'rb') as f:
                         pass
-                    os.sync()  # Force OS to write buffered data to disk
+                    if hasattr(os, "sync"):
+                        os.sync()  # Force OS to write buffered data to disk (POSIX)
                 print(f"[DEBUG] plt.savefig completed for DAG plot")
             except Exception as save_error:
                 print(f"[ERROR] Failed to save DAG plot: {save_error}")
@@ -1425,9 +1426,9 @@ Rscript run_complete_workflow.R
                     perp_y = 0.06
                     
                     if cond_set:
-                        ci_label = f"{x} \u27C2 {y} | {', '.join(cond_set)}"
+                        ci_label = f"{x} _||_ {y} | {', '.join(cond_set)}"
                     else:
-                        ci_label = f"{x} \u27C2 {y}"
+                        ci_label = f"{x} _||_ {y}"
                     
                     ax.text(mid_x + perp_x, mid_y + perp_y, ci_label,
                             fontsize=7, color="#DC2626", ha='center', va='center',
@@ -1704,7 +1705,7 @@ Rscript run_complete_workflow.R
                 col_labels = ['#', 'CI Statement', 'Test', 'Adj. p-value', 'Result']
                 table_data = []
                 for i, t in enumerate(parsed_tests, 1):
-                    ci_display = f"{t['x']} \u27C2 {t['y']}"
+                    ci_display = f"{t['x']} _||_ {t['y']}"
                     if t['cond_set']:
                         ci_display += f" | {t['cond_set']}"
                     
@@ -1933,7 +1934,8 @@ Rscript run_complete_workflow.R
                 if img_path.exists():
                     with open(img_path, 'rb') as f:
                         pass
-                    os.sync()  # Force OS to write buffered data to disk
+                    if hasattr(os, "sync"):
+                        os.sync()  # Force OS to write buffered data to disk (POSIX)
                 print(f"[DEBUG] plt.savefig completed for distribution plot")
             except Exception as save_error:
                 print(f"[ERROR] Failed to save distribution plot: {save_error}")
@@ -3327,7 +3329,7 @@ Explain what these results mean in simple terms for a medical doctor."""
             return True
 
         action_match = re.match(
-            r"^(please\s+)?(compute|calculate|run|fit|train|test|generate|create|open|download|show|sample)\b",
+            r"^(please\s+)?(compute|calculate|run|fit|train|test|generate|create|open|download|show|sample|apply|suggest)\b",
             lower,
         )
         if not action_match:
@@ -3408,12 +3410,12 @@ Explain what these results mean in simple terms for a medical doctor."""
             return self._show_uploaded_pairplot()
         
         # ── "apply revisions" — update DAG based on earlier LLM suggestions ──
-        if self._is_explicit_tool_command(lower) and "apply" in lower and "revision" in lower:
+        if "apply" in lower and "revision" in lower:
             print(f"[PRE-ROUTE] Intercepted 'apply revisions' at step '{step}'")
             return self._apply_revisions_to_dag()
         
         # ── "suggest revisions" — ask LLM to analyse CI failures ──
-        if self._is_explicit_tool_command(lower) and "suggest" in lower and "revision" in lower:
+        if "suggest" in lower and "revision" in lower:
             print(f"[PRE-ROUTE] Intercepted 'suggest revisions' at step '{step}'")
             return self._step_4_propose_revisions()
         
@@ -3697,6 +3699,10 @@ RULES:
                     vars_list = list(self.state.data_df.columns)
                 elif self.session_id in sessions:
                     vars_list = sessions[self.session_id].get("data_info", {}).get("columns", []) or []
+                # For unit tests / explicit override flows where dataframe is
+                # intentionally absent, allow direct vars argument.
+                if self.state.data_df is None and tool_args.get("vars"):
+                    vars_list = tool_args.get("vars", []) or vars_list
                 if not vars_list:
                     vars_list = tool_args.get("vars", [])
                 
@@ -3709,7 +3715,7 @@ RULES:
                         "variables": vars_list,
                         "edges": [],
                         "llm_explanation": (
-                            "Cannot infer a DAG — variable names are generic and "
+                            "Cannot infer a DAG - variable names are generic and "
                             "do not carry enough semantic meaning."
                         ),
                     }
@@ -6909,7 +6915,7 @@ async def get_dag_editor_data(session_id: str):
                 cond_set = ci.get("conditioning_set", []) or []
                 if not source or not target:
                     continue
-                label = f"{source} ⟂ {target}"
+                label = f"{source} _||_ {target}"
                 if cond_set:
                     label += " | " + ", ".join(str(v) for v in cond_set)
                 ci_overlays.append({
