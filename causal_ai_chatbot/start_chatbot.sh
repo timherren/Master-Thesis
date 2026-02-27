@@ -10,7 +10,7 @@ cd "$SCRIPT_DIR"
 
 # Check for .env file (look in multiple locations)
 if [ ! -f ".env" ]; then
-    echo "⚠️  Warning: .env file not found"
+    echo "Warning: .env file not found"
     echo "   Local default is Ollama (fully offline)."
     echo "   Optional .env (recommended):"
     echo "     LLM_PROVIDER=ollama"
@@ -24,7 +24,7 @@ fi
 echo "Checking Python dependencies..."
 python -c "import fastapi, uvicorn, pandas, numpy, torch, matplotlib, requests" 2>/dev/null
 if [ $? -ne 0 ]; then
-    echo "❌ Missing Python dependencies. Installing..."
+    echo "Missing Python dependencies. Installing..."
     pip install -r requirements_chatbot.txt
 fi
 
@@ -32,7 +32,7 @@ fi
 echo "Checking TRAM-DAG installation..."
 python -c "from tramdag import TramDagConfig" 2>/dev/null
 if [ $? -ne 0 ]; then
-    echo "⚠️  Warning: TRAM-DAG import failed."
+    echo "Warning: TRAM-DAG import failed."
     echo "   Install the tramdag package in this environment."
     echo "   Try running: python tests/test_imports.py"
     echo "   Example: pip install tramdag"
@@ -48,7 +48,7 @@ print("Runtime directories verified.")
 PY
 
 echo ""
-echo "✅ Starting server..."
+echo "Starting server..."
 echo "   Open http://localhost:8000 in your browser"
 echo ""
 

@@ -139,8 +139,8 @@ python test_imports.py
 ```
 
 Expected output:
-- ✅ TRAM-DAG import successful
-- ✅ R Integration import successful (or warning if optional)
+- TRAM-DAG import successful
+- R Integration import successful (or warning if optional)
 
 ## Getting Help
 

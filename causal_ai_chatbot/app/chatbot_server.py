@@ -4565,19 +4565,19 @@ RULES:
             
             # Check what we have
             if self.state.data_path:
-                response += "✅ Data is uploaded\n"
+                response += "Data is uploaded\n"
             else:
-                response += "❌ No data uploaded yet\n"
+                response += "No data uploaded yet\n"
             
             if self.state.proposed_dag:
-                response += "✅ DAG is proposed\n"
+                response += "DAG is proposed\n"
             else:
-                response += "❌ No DAG yet\n"
+                response += "No DAG yet\n"
             
             if self.state.fitted_model:
-                response += "✅ Model is fitted\n"
+                response += "Model is fitted\n"
             else:
-                response += "❌ Model not fitted yet\n"
+                response += "Model not fitted yet\n"
             
             response += "\n**What would you like to do?**\n\n"
             
@@ -4585,7 +4585,7 @@ RULES:
             if not self.state.data_path:
                 actions.append({
                     "label": "Upload data",
-                    "command": "Click the '📁 Upload Data' button above",
+                    "command": "Click the 'Upload Data' button above",
                     "description": "Start by uploading your CSV or Excel file"
                 })
             elif not self.state.proposed_dag:
@@ -4690,12 +4690,12 @@ RULES:
             
             actions = [
                 {
-                    "label": "📁 Upload data file",
-                    "command": "Click the '📁 Upload Data' button above",
+                    "label": "Upload data file",
+                    "command": "Click the 'Upload Data' button above",
                     "description": "Upload a CSV or Excel file with your data"
                 },
                 {
-                    "label": "💬 Specify variables in your question",
+                    "label": "Specify variables in your question",
                     "command": "I have variables age, bmi, blood_pressure. Compute the ate.",
                     "description": "Tell me your variable names and I'll ask which X/Y to use"
                 }
@@ -5374,7 +5374,7 @@ Suggest specific edge additions/removals to fix the DAG. Return JSON only."""
                         explanation = await self._generate_medical_explanation("intervention", explanation_data)
                         if not explanation:
                             explanation = "This intervention simulation shows how the model output shifts when one variable is fixed to a chosen value."
-                        response += f"\n**📋 What This Means (Simple Explanation):**\n\n{explanation}\n\n"
+                        response += f"\n**What This Means (Simple Explanation):**\n\n{explanation}\n\n"
                     except Exception as e:
                         print(f"[WARNING] Failed to generate explanation for intervention: {e}")
                     
@@ -5516,10 +5516,10 @@ Suggest specific edge additions/removals to fix the DAG. Return JSON only."""
                         explanation = await self._generate_medical_explanation("ate", ate_result)
                         if not explanation:
                             explanation = self._default_ate_interpretation(ate_result)
-                        response += f"**📋 What This Means (Simple Explanation):**\n\n{explanation}\n\n"
+                        response += f"**What This Means (Simple Explanation):**\n\n{explanation}\n\n"
                     except Exception as e:
                         print(f"[WARNING] Failed to generate explanation for ATE: {e}")
-                        response += f"**📋 What This Means (Simple Explanation):**\n\n{self._default_ate_interpretation(ate_result)}\n\n"
+                        response += f"**What This Means (Simple Explanation):**\n\n{self._default_ate_interpretation(ate_result)}\n\n"
                     
                     # Auto-generate intervention report
                     try:
@@ -5665,7 +5665,7 @@ Suggest specific edge additions/removals to fix the DAG. Return JSON only."""
                     }
                     explanation = await self._generate_medical_explanation("association", explanation_data)
                     if explanation:
-                        response += f"**📋 What This Means (Simple Explanation):**\n\n{explanation}\n\n"
+                        response += f"**What This Means (Simple Explanation):**\n\n{explanation}\n\n"
                 except Exception as e:
                     print(f"[WARNING] Failed to generate explanation for associations: {e}")
                 
@@ -5696,8 +5696,8 @@ Suggest specific edge additions/removals to fix the DAG. Return JSON only."""
                 
                 actions = [
                     {
-                        "label": "📁 Upload data",
-                        "command": "Click the '📁 Upload Data' button above",
+                        "label": "Upload data",
+                        "command": "Click the 'Upload Data' button above",
                         "description": "Upload your CSV or Excel file"
                     }
                 ]
@@ -5858,7 +5858,7 @@ Suggest specific edge additions/removals to fix the DAG. Return JSON only."""
                 
                 response += "**All plots generated and displayed above!**\n\n"
             
-            response += f"📁 **All plots saved in:** `{TEMP_PLOTS_DIR}`\n"
+            response += f"**All plots saved in:** `{TEMP_PLOTS_DIR}`\n"
             
             # Add action suggestions after plot generation
             # Get variables from DAG for action suggestions
@@ -6043,10 +6043,10 @@ Parse this query and return ONLY valid JSON with the structure:
                         explanation = await self._generate_medical_explanation("ate", ate_result)
                         if not explanation:
                             explanation = self._default_ate_interpretation(ate_result)
-                        response += f"**📋 What This Means (Simple Explanation):**\n\n{explanation}\n\n"
+                        response += f"**What This Means (Simple Explanation):**\n\n{explanation}\n\n"
                     except Exception as e:
                         print(f"[WARNING] Failed to generate explanation for ATE: {e}")
-                        response += f"**📋 What This Means (Simple Explanation):**\n\n{self._default_ate_interpretation(ate_result)}\n\n"
+                        response += f"**What This Means (Simple Explanation):**\n\n{self._default_ate_interpretation(ate_result)}\n\n"
                     
                     # Auto-generate intervention report
                     try:
@@ -7401,7 +7401,7 @@ async def websocket_endpoint(websocket: WebSocket):
             await websocket.send_json({
                 "type": "error",
                 "role": "assistant",
-                "content": f"❌ An error occurred: {error_msg}\n\nPlease try again or refresh the page. The connection will remain active.",
+                "content": f"An error occurred: {error_msg}\n\nPlease try again or refresh the page. The connection will remain active.",
                 "error_details": error_msg if len(error_msg) < 200 else error_msg[:200] + "..."
             })
         except Exception as send_error:

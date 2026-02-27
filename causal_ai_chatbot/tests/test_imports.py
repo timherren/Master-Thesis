@@ -37,17 +37,17 @@ if tramdag_path.exists():
     # Try import
     try:
         from tramdag import TramDagConfig, TramDagModel, TramDagDataset
-        print("   ✅ TRAM-DAG import successful!")
+        print("   [OK] TRAM-DAG import successful!")
         print(f"   TramDagConfig: {TramDagConfig}")
         print(f"   TramDagModel: {TramDagModel}")
     except ImportError as e:
-        print(f"   ❌ TRAM-DAG import failed: {e}")
+        print(f"   [ERROR] TRAM-DAG import failed: {e}")
         print(f"   sys.path entries containing 'tramdag':")
         for p in sys.path:
             if 'tramdag' in p.lower():
                 print(f"     - {p}")
 else:
-    print(f"   ❌ TramDag directory not found at {tramdag_path}")
+    print(f"   [ERROR] TramDag directory not found at {tramdag_path}")
 
 print()
 
@@ -68,12 +68,12 @@ if application_dir.exists():
         
         try:
             from r_python_bridge import RConsistencyChecker
-            print("   ✅ R Integration import successful!")
+            print("   [OK] R Integration import successful!")
             print(f"   RConsistencyChecker: {RConsistencyChecker}")
         except ImportError as e:
-            print(f"   ❌ R Integration import failed: {e}")
+            print(f"   [ERROR] R Integration import failed: {e}")
 else:
-    print(f"   ⚠️  Application directory not found (this is OK if R integration is optional)")
+    print(f"   [WARN] Application directory not found (this is OK if R integration is optional)")
 
 print()
 print("=" * 60)

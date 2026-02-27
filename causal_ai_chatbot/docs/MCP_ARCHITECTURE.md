@@ -70,15 +70,15 @@ All tools are formally defined in `MCPToolRegistry` with:
 ### 3. Local Execution
 
 **Critical**: All data analysis runs locally:
-- ✅ TRAM-DAG model fitting (Python)
-- ✅ CI tests (R subprocess)
-- ✅ Sampling and ATE computation (Python)
-- ✅ Report generation (Python)
+- TRAM-DAG model fitting (Python)
+- CI tests (R subprocess)
+- Sampling and ATE computation (Python)
+- Report generation (Python)
 
 **Only agent decisions use the LLM:**
-- ✅ Tool selection (function calling)
-- ✅ DAG proposal (LLM suggests structure)
-- ✅ Result interpretation (LLM explains)
+- Tool selection (function calling)
+- DAG proposal (LLM suggests structure)
+- Result interpretation (LLM explains)
 
 **No data is sent to external analysis services** - only variable names and summaries are used for LLM decisions.
 

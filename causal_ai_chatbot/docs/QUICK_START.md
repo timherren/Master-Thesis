@@ -66,7 +66,7 @@ Then open: **http://localhost:8000**
 
 ## Example Workflow
 
-1. **Upload Data**: Click "📁 Upload Data" button, select CSV file
+1. **Upload Data**: Click "Upload Data" button, select CSV file
 2. **Ask Question**: "What is the effect of treatment on outcome?"
 3. **Agent Proposes DAG**: LLM suggests causal structure
 4. **Agent Tests DAG**: CI tests validate against data
@@ -77,12 +77,12 @@ Then open: **http://localhost:8000**
 
 ## Key Features
 
-✅ **LLM-Powered DAG Proposal** - Uses local Ollama for fully offline decision support  
-✅ **DAG Consistency Testing** - Validates DAGs using R CI tests  
-✅ **Interactive Revisions** - Agent suggests improvements  
-✅ **TRAM-DAG Integration** - Full model fitting and sampling  
-✅ **Causal Query Answering** - Association, intervention, counterfactual  
-✅ **Reproducible Reports** - Complete analysis with code  
+- **LLM-Powered DAG Proposal** - Uses local Ollama for fully offline decision support  
+- **DAG Consistency Testing** - Validates DAGs using R CI tests  
+- **Interactive Revisions** - Agent suggests improvements  
+- **TRAM-DAG Integration** - Full model fitting and sampling  
+- **Causal Query Answering** - Association, intervention, counterfactual  
+- **Reproducible Reports** - Complete analysis with code  
 
 ## Architecture Highlights
 
@@ -160,4 +160,4 @@ See `IMPLEMENTATION_GUIDE.md` for:
 
 ---
 
-**Ready to use!** Start the server and begin your causal inference conversation. 🚀
+**Ready to use!** Start the server and begin your causal inference conversation.

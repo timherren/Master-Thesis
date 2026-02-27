@@ -6,7 +6,7 @@
 
 ## What Runs Locally
 
-### ✅ Local Analysis (No external data processing)
+### Local Analysis (No external data processing)
 
 1. **Data Upload & Processing**
    - File reading (CSV, Excel)
@@ -41,7 +41,7 @@
 
 ## What Uses the LLM (Agent Decisions Only)
 
-### 🤖 LLM Calls (Agent Decisions)
+### LLM Calls (Agent Decisions)
 
 1. **DAG Proposal** (`propose_dag_from_llm()`)
    - **Input**: Variable names (strings only)
@@ -57,10 +57,10 @@
 
 ## Data Privacy
 
-- ✅ **Your data never leaves your machine**
-- ✅ **Only variable names and test summaries are sent to the LLM**
-- ✅ **All model fitting, sampling, and analysis is 100% local**
-- ✅ **The LLM is only used for "thinking" (agent decisions), not computation**
+- **Your data never leaves your machine**
+- **Only variable names and test summaries are sent to the LLM**
+- **All model fitting, sampling, and analysis is 100% local**
+- **The LLM is only used for "thinking" (agent decisions), not computation**
 
 ## Verification
 

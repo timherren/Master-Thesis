@@ -37,8 +37,8 @@ The UI automatically converts action suggestions into clickable buttons:
 - Clear instructions on how to start
 
 **Actions:**
-- 📁 Upload your data
-- 💬 Ask a causal question
+- Upload your data
+- Ask a causal question
 
 ---
 
@@ -48,9 +48,9 @@ The UI automatically converts action suggestions into clickable buttons:
 - Clear next steps
 
 **Actions:**
-- ✅ Test this DAG against your data
-- ✏️ Modify the DAG structure (add/remove edges)
-- 🔄 Ask for a different DAG
+- Test this DAG against your data
+- Modify the DAG structure (add/remove edges)
+- Ask for a different DAG
 
 **Example commands:**
 - `yes` - Test the DAG
@@ -66,15 +66,15 @@ The UI automatically converts action suggestions into clickable buttons:
 - Interpretation of results
 
 **If consistent:**
-- ✅ The DAG is consistent with your data!
-- 🚀 Fit the TRAM-DAG model
-- ✏️ Modify the DAG anyway
+- The DAG is consistent with your data.
+- Fit the TRAM-DAG model
+- Modify the DAG anyway
 
 **If inconsistent:**
-- ⚠️ Some assumptions were rejected
-- 🔧 Get revision suggestions
-- ✏️ Manually modify the DAG
-- ✅ Proceed anyway (not recommended)
+- Some assumptions were rejected
+- Get revision suggestions
+- Manually modify the DAG
+- Proceed anyway (not recommended)
 
 ---
 
@@ -84,10 +84,10 @@ The UI automatically converts action suggestions into clickable buttons:
 - Explanation of why revisions are needed
 
 **Actions:**
-- ✏️ Apply these revisions
-- ✏️ Manually modify the DAG
-- 🚀 Proceed to model fitting
-- 🔄 Test the DAG again
+- Apply these revisions
+- Manually modify the DAG
+- Proceed to model fitting
+- Test the DAG again
 
 ---
 
@@ -98,11 +98,11 @@ The UI automatically converts action suggestions into clickable buttons:
 - Experiment directory
 
 **Actions:**
-- 📊 Compute Average Treatment Effect (ATE)
-- 🔬 Perform intervention analysis
-- 📈 Generate plots and visualizations
-- 📋 Show associations
-- 📄 Download full report
+- Compute Average Treatment Effect (ATE)
+- Perform intervention analysis
+- Generate plots and visualizations
+- Show associations
+- Download full report
 
 **Example commands:**
 - `What is the effect of x1 on x3?` - Compute ATE
@@ -115,20 +115,20 @@ The UI automatically converts action suggestions into clickable buttons:
 
 ### Step 6: Query Answering
 **After ATE computation:**
-- 📄 Download intervention report
-- 🔬 Try different intervention values
-- 📊 Compute ATE for other variables
-- 📈 Generate plots
+- Download intervention report
+- Try different intervention values
+- Compute ATE for other variables
+- Generate plots
 
 **After plot generation:**
-- 📄 Download full PDF report
-- 🔬 Ask more causal questions
-- 📊 Generate more plots
+- Download full PDF report
+- Ask more causal questions
+- Generate more plots
 
 **After association analysis:**
-- 🔬 Compute causal effects (ATE)
-- 📈 Generate plots
-- 📄 Download full report
+- Compute causal effects (ATE)
+- Generate plots
+- Download full report
 
 ---
 
@@ -144,7 +144,7 @@ The UI automatically converts action suggestions into clickable buttons:
 - **Bold headers**: Important information stands out
 - **Code blocks**: Commands shown in monospace
 - **Lists**: Structured information
-- **Emojis**: Visual indicators for different action types
+- **Labels**: Clear indicators for different action types
 
 ### Status Indicators
 - **Step indicators**: Show current workflow position
@@ -164,43 +164,43 @@ The UI automatically converts action suggestions into clickable buttons:
 3. **DAG proposed**
    - Agent shows proposed DAG
    - **Action buttons appear:**
-     - ✅ Test this DAG
-     - ✏️ Modify the DAG
-     - 🔄 Ask for different DAG
+     - Test this DAG
+     - Modify the DAG
+     - Ask for different DAG
    - User clicks "Test this DAG"
 
 4. **DAG tested**
    - Agent shows test results
    - **Action buttons appear:**
-     - 🚀 Fit the TRAM-DAG model (if consistent)
-     - 🔧 Get revision suggestions (if inconsistent)
+     - Fit the TRAM-DAG model (if consistent)
+     - Get revision suggestions (if inconsistent)
    - User clicks "Fit the TRAM-DAG model"
 
 5. **Model fitted**
    - Agent shows training summary
    - **Action buttons appear:**
-     - 📊 Compute ATE
-     - 🔬 Perform intervention
-     - 📈 Generate plots
-     - 📄 Download report
+     - Compute ATE
+     - Perform intervention
+     - Generate plots
+     - Download report
    - User clicks "Compute ATE"
 
 6. **ATE computed**
    - Agent shows results
    - **Action buttons appear:**
-     - 📄 Download report
-     - 🔬 Try different values
-     - 📊 Compute for other variables
+     - Download report
+     - Try different values
+     - Compute for other variables
    - User clicks "Download report"
 
 ## Benefits
 
-✅ **No guessing** - Users always know what they can do  
-✅ **Clear guidance** - Step-by-step instructions  
-✅ **Visual feedback** - Action buttons show options  
-✅ **Flexible** - Can type commands or click buttons  
-✅ **Educational** - Descriptions explain each action  
-✅ **Progressive** - Guidance adapts to workflow state  
+- **No guessing** - Users always know what they can do  
+- **Clear guidance** - Step-by-step instructions  
+- **Visual feedback** - Action buttons show options  
+- **Flexible** - Can type commands or click buttons  
+- **Educational** - Descriptions explain each action  
+- **Progressive** - Guidance adapts to workflow state  
 
 ## Implementation Details
 
@@ -220,17 +220,17 @@ The UI automatically converts action suggestions into clickable buttons:
 Actions are structured as:
 ```python
 {
-    "label": "📊 Compute ATE",
+    "label": "Compute ATE",
     "command": "What is the effect of x1 on x3?",
     "description": "Get the causal effect between two variables"
 }
 ```
 
 Displayed as:
-- **Label** (with emoji)
+- **Label**
 - **Description** (what it does)
 - **Command** (what will be sent)
 
 ---
 
-**Result**: Users have complete visibility into what they can do at every step, with both visual buttons and natural language options. No guessing required! 🎯
+**Result**: Users have complete visibility into what they can do at every step, with both visual buttons and natural language options. No guessing required.
